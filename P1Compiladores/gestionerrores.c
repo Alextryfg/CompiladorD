@@ -12,7 +12,7 @@ void errorArchivo(int codigo){
 		break;
 	case 2:
 		/*Error reading file*/
-		printf("Error en la lectura dle archivo\n");
+		printf("Error en la lectura de archivo\n");
 		break;
 	}
 }
