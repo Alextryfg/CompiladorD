@@ -41,19 +41,18 @@ void abrir_arquivo(char *arquivo) {
 	//Opening the file with error checking
 	if ((archivoEntrada = fopen(arquivo, "r")) != NULL) {
 		crearBuffer();
-		fseek(archivoEntrada, pos_lectura, SEEK_SET);
-		int caracteres_lidos = fread(buf.centA, sizeof(char), N,
-				archivoEntrada); //The first sentinel is filled
+		fseek(archivoEntrada, pos_lectura, SEEK_SET); //ESTO MEJOR SIN FSEEK
+		int caracteres_lidos = fread(buf.centA, sizeof(char), N, archivoEntrada); //The first sentinel is filled
 		buf.centA[caracteres_lidos] = EOF; //EOF is inserted in the last position
 		if (!ferror(archivoEntrada)) { //Error checking
 			fflush(archivoEntrada);
 			pos_lectura = ftell(archivoEntrada);//Storing the reading position in the file
 		} else {
-			erroArquivo(2);
+			errorArchivo(2);
 		}
 
 	} else
-		erroArquivo(1);
+		errorArchivo(1);
 }
 
 /*File closure*/
@@ -78,7 +77,7 @@ void _ocupar_centinela() {
 			if (sobrepasa)//If the lexeme is too long, we place the start pointer in the next block
 				buf.inicio = N;
 		} else {
-			erroArquivo(2);
+			errorArchivo(2);
 		}
 
 	} else if (buf.turno == SEGUNDO) {
@@ -91,7 +90,7 @@ void _ocupar_centinela() {
 			if (sobrepasa)
 				buf.inicio = 0;
 		} else {
-			erroArquivo(2);
+			errorArchivo(2);
 		}
 	}
 }
@@ -198,7 +197,7 @@ void devolver_caracter() {
  *
  * In case the size exceeds the allowed one, the last part of the lexeme will be returned
  * */
-
+//Obtener lexema
 void _recuperar(char **lexema, int tam, int avanza) {
 
 	if (!avanza) {
