@@ -169,19 +169,23 @@ int _tam_lexema() {
 }
 
 /*
- * Function that will make the forward pointer go back to the corresponding position when a character is found that determines the end of the lexeme.
- * Take into account those cases in which the recoil causes a change of sentinel
+ * Deshace el avance del puntero delantero, cuando se encuentra el carácter que determina el final del lexema y
+ * permite asi que se recupere el lexema al completo.
  * */
 void devolver_caracter() {
 	if (buf.turno == PRIMEIRO) {
+		//Si el puntero delantero se encuentra en la primera posicion del bloque A, se cambia el turno
+		// y se coloca el puntero delantero en la ultima posicion del bloque B
 		if (buf.delantero == 0) {
 			buf.turno = SEGUNDO;
 			buf.delantero = N * 2 - 1;
 			retroceso = 0;
-		} else {
+		} else { //Si no esta en esa posicion(que es comprometida), simplemente se retrocede una posicion
 			buf.delantero--;
 		}
 	} else if (buf.turno == SEGUNDO) {
+		//Es lo mismo que en el bloque A, pero estando en la primera posicion del bloque B. Tienes que volver a la ultima posicion del bloque A
+		// para poder recuperar el lexema completo.
 		if (buf.delantero == N) {
 			buf.turno = PRIMEIRO;
 			buf.delantero = N - 1;
@@ -196,18 +200,20 @@ void devolver_caracter() {
  * Functions that retrieve the lexeme and return it
  *
  * In case the size exceeds the allowed one, the last part of the lexeme will be returned
+ * 
+ * Si avanza es 0, se devuelve el lexema completo
  * */
 //Obtener lexema
 void _recuperar(char **lexema, int tam, int avanza) {
 
 	if (!avanza) {
-		*lexema = (char*) malloc(tam + 1 * sizeof(char));//memory reserve for the lexeme
-		if (buf.inicio < N && buf.delantero >= N) {	//Differents sentinels
-			strncpy(*lexema, buf.centA + buf.inicio, N - buf.inicio);
-			strncpy(*lexema + N - buf.inicio, buf.centB, buf.delantero - N);
-		} else if (buf.inicio > buf.delantero) {//Initial in second sentinel and forward in first sentinel.
-			strncpy(*lexema, buf.centB + buf.inicio - N, (N * 2) - buf.inicio);
-			strncpy(*lexema + (N * 2) - buf.inicio, buf.centA, buf.delantero);
+		*lexema = (char*) malloc(tam + 1 * sizeof(char));//reservo memoria para el lexema
+		if (buf.inicio < N && buf.delantero >= N) {	//Si el puntero inicio esta en el centinela A y el puntero delantero en el centinela B
+			strncpy(*lexema, buf.centA + buf.inicio, N - buf.inicio); //Se copia en lexema desde el inicio hasta el final del centinela A, los caracteres desde el puntero inicio, hasta el final del centinela A
+			strncpy(*lexema + N - buf.inicio, buf.centB, buf.delantero - N); //Se apunte al ultimo caracter copiado en el anterior strncpy y se copia desde el inicio del centinela B hasta el puntero delantero
+		} else if (buf.inicio > buf.delantero) {//Si el puntero inicio esta en el centinela B y el puntero delantero en el centinela A
+			strncpy(*lexema, buf.centB + buf.inicio - N, (N * 2) - buf.inicio);//Se copia desde el puntero incio hasta el final de B
+			strncpy(*lexema + (N * 2) - buf.inicio, buf.centA, buf.delantero); //Se apunte al ultimo caracter copiado en el anterior strncpy y se copia desde el inicio del centinela A hasta el puntero delantero
 
 		} else {
 			if (buf.turno == PRIMEIRO) {
@@ -239,6 +245,8 @@ void _recuperar(char **lexema, int tam, int avanza) {
 	}
 
 }
+
+
 void recuperar_lexema(char **lexema) {
 
 	int tam = _tam_lexema();

@@ -8,7 +8,10 @@
 #include "errores.h"
 
 
-/*	STRUCTURE OF THE LEXICAL COMPONENT
+/*	Esta sera la estructura del componente lexico, que será formada por
+ *	un lexema y un codigo que identifica el lexema. De esta manera, una vez el sistema
+ *	de entrada nos envie suficientes caracteres como para formar un lexema, este se completará
+ *	y se devolverá al sintactico. Para que lo imprima por pantalla junto a su código.
  *	char *nome_lexema: lexeme
  *	int codigo: lexeme code
  * */
@@ -51,7 +54,7 @@ void _comprobar_exponente(int *malFormado, char *c) {
 		*c = seguinte_caracter();
 }
 
-/* Function responsible for the recovery of the lexeme of the input system
+/* Recupera el lexema y lo almacena en la estructura del componente lexico
  * Arguments:
  * 	compLexico *lexema: lexical component structure
  * 	int codigo: lexeme code.
@@ -63,13 +66,20 @@ void _comprobar_exponente(int *malFormado, char *c) {
  * */
 void _recuperar_lexema(compLexico *lexema, int codigo, int devolve) {
 	liberarMemoria(lexema);
+	//En caso de que sea necesario devolver el caracter, se devuelve.
 	if (devolve)
+		//Se devuelve el caracter, es decir, se actualiza las posiciones de los punteros del buffer de doble centinela
+		//para que el siguiente caracter que se lea sea el que se ha devuelto.
 		devolver_caracter();
+	//Se recupera el lexema
 	recuperar_lexema(&(lexema->nome_lexema));
-		if (codigo == ID) {
-			codigo = buscar(lexema->nome_lexema);
+		if (codigo == ID) { //Aqui esta el ID del codigo en letra
+			codigo = buscar(lexema->nome_lexema); //Esta funcion busca el numero de codigo del lexema en la tabla de simbolos 
 		}
+		//Sustitucion del codigo del lexema
 		lexema->codigo = codigo;
+		//Cuando se acepta el lexema, se reinician las posicones de los punteros dentro del buffer de doble centinela.
+		//De esta forma, el buffer de inicio se va a la posicion del delantero, y se almacena el siguiente comp_lexico
 		aceptar_lexema();
 }
 
@@ -84,7 +94,7 @@ void _recuperar_lexema(compLexico *lexema, int codigo, int devolve) {
  * */
 int seguinte_comp_lexico(compLexico *lexema) {
 	int aceptar = 1;
-	int estado = 0;		//state of the automaton
+	int estado = 0;		//Estado del automata
 	int malFormado = 1;	//Lexeme error
 	int exponhente = 1;	//It allows to ensure that the exponent does not appear more than once in a number, so that, given the case, it is recognized as a different one.
 	char c;
@@ -93,44 +103,57 @@ int seguinte_comp_lexico(compLexico *lexema) {
 		case 0:	//State 0 of all automata
 			c = seguinte_caracter();
 
-			if (isblank(c) || c == '\n' || c == '\r' || c == ',' || c == ';') {	//The lexeme is accepted, except in two cases
-				if (c == ',' || c == ';') {
-					_recuperar_lexema(lexema, c, 0);
-					estado = 11;
+			//Se comprueba si es un espacio blanco/tabulador , o un salto de linea, o un retorno de carro, o una coma o un punto y coma
+
+			if (isblank(c) || c == '\n' || c == '\r' || c == ',' || c == ';') {	//Se acepta el carácter y se hace otro if
+				if (c == ',' || c == ';') { //Si es , o ; se va al estado 11, se rompe el switch y se acepta el carácter y se coge el siguiente esta vez se procesa desde el estado 11
+					_recuperar_lexema(lexema, c, 0); //Se recupera el lexema y se almacena en la estructura del componente lexico
+					estado = 11; //Se pasa al estado 11, que es el estado de aceptacion de los lexemas
 					break;
 				}
+				//Este es el caso de aceptacion de los espacios en blanco, tabuladores, saltos de linea, retorno de carro
+				//La funcion aceptar_lexema() se ejecuta tb en _recuperar_lexema(), pero en este caso no se recupera el lexema, por lo que se ejecuta aqui
 				aceptar_lexema();
-			} else if (isalpha(c) || c == '_') {//First state of the alphanumeric automaton
+			} else if (isalpha(c) || c == '_') {//Si es un carácter alfabético o un guión bajo, se pasa al estado 1 del automata de identificadores
 				estado = 1;
-			} else if (isdigit(c)) {			//First state of the numerical automaton
+			//DE AQUI PARA ABAJO HAY QUE CAMBIARLOS TODOS
+			} else if (isdigit(c)) { //Si es un dígito, se pasa al estado 2 del automata de números
 				estado = 2;
-			} else if (c == '"') {				//String automaton
+			} else if (c == '"') { //Si es una comilla doble, se pasa al estado 3 del automata de cadenas
 				estado = 3;
-			} else if (c == '+' || c == '-' || c == '*' || c == '%' || c == ':'
-					|| c == '=' || c == '/') {		//Operator automaton
+			//De este habria que eliminar :, ya que no existe :=. A mayores se puede añadir |=, <=, >= , ^= , >>>= , <<=, >>=, !=, ^^=, ~=
+			} else if (c == '+' || c == '-' || c == '*' || c == '%' || c == ':'|| c == '=' || c == '/') { //Este es el automata de operadores que pueden tener un = despues
 				estado = 4;
-			} else if (c == '[' || c == ']' || c == '(' || c == ')' || c == '{'
-					|| c == '}') {//Operator automata that will not have an = after
+			} else if (c == '[' || c == ']' || c == '(' || c == ')' || c == '{'|| c == '}') { //Automata de operadores que no pueden tener un = despues, simplemente se procesan y se imprimen, SE PUEDEN AÑADIR MAS, IR A TOKENS EN EL MANUAL
 				estado = 5;
-			} else if (c == '<') {					//Operator <
+			} else if (c == '<') {	//
 				estado = 8;
 			} else if (c == '.') {//Automata that will recognize if it is a single point or a float number
 				estado = 7;
+			//MENOS ESTE CREO
 			} else if (c == EOF) {//End of file.
+				//Simplemente se libera la memoria del lexema
 				liberarMemoria(lexema);
+				//Y se acepta, para acabar el bucle while, salir de el y terminar la fase de analisis lexico
 				aceptar = 0;
 			}
 			break;
 		case 1:
-			/*			ALPHANUMERIC AUTOMATON
-			 * Characters are requested until an element other than letters, numbers or _ is found.
-			 * */
+			/* TAL Y COMO MENCIONA EL MANUAL:
+			Identifiers start with a letter, _, or universal alpha, and are followed by any number of letters, _, digits, or universal alphas.
+			Por lo que pediremos caracteres hasta que no sean universales alfas(isalpha()), ni digitos(isdigit()), ni guiones bajos.
+			*/
 			c = seguinte_caracter();
 			while (isalpha(c) || isdigit(c) || c == '_') {
 				c = seguinte_caracter();
 			}
 
+			//Una vez llega a un caracter que no es alfa, digito o guion bajo, se devuelve el caracter y se recupera el lexema
+			//y se almacena en la estructura bajo el codigo de ID. Se pasa un 1 a avanza, para que se avance el puntero delantero
+
 			_recuperar_lexema(lexema, ID, 1);
+
+			//Se pasa al estado de aceptacion de los lexemas
 			estado = 11;
 			break;
 		case 2:

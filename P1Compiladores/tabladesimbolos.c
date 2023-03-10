@@ -12,10 +12,10 @@ typedef struct {
 	int registro;
 } palabras_reservadas;
 
-//Initial keywords
-palabras_reservadas estructuras[] = { { "package", PACKAGE },
-		{ "import", IMPORT }, { "func", FUNC }, { "chan", CHAN },
-		{ "var", VAR }, { "range", RANGE }, { "go", GO }, { "for", FOR } };
+//Palbaras reservadas iniciales
+palabras_reservadas estructuras[] = { { "ID", ID },
+		{ "import", IMPORT }, { "STRING", STRING }, { "INT", INT },
+		{ "FLOAT", FLOAT }, { "WHILE", WHILE }, { "FOREACH", FOREACH }, { "RETURN", RETURN }, { "VOID", VOID }};
 
 //Creating table and inserting keywords in the table
 void inicializarTabla() {
@@ -33,12 +33,12 @@ void destruirTabla() {
 	destruir(&arbol);
 }
 
-//Print table
+//Imprime la tabla
 void imprimirTabla() {
 	imprimir_tabla(&arbol);
 }
 
-//Search and insertion of lexeme
+//Busca el codigo del lexema en la tabla de símbolos
 int buscar(char *lexema) {
 	return buscar_lexema(&arbol, lexema);
 }
