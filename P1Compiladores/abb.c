@@ -2,138 +2,193 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "definiciones.h"
 
-/*			STRUCTURES			*/
-
-/*Elements of the tree
- *
- * char *lexema: Keywords or ID names
- * int codigo: Keywords or ID codes
- * */
-typedef struct {
-	char *lexema;
-	int codigo;
-} elemento;
-
-/*Cells that make up the tree
- *
- * elemento info: lexeme
- * struct celda *izq, *der: pointer to child nodes
- * */
 struct celda {
-	elemento info;
-	struct celda *izq, *der;
+    tipoelem info;
+    struct celda *izq, *der;
 };
 
-/*Tree Initialization*/
+
+/*Extraer la clave de una celda */
+tipoclave _clave_elem(tipoelem *E) {
+    return E->lexema;
+}
+
+/* Esta funcion puente nos permite modificar el tipo de
+ * de datos del TAD sin tener que cambiar todas las 
+ * comparaciones del resto de la biblioteca y en su lugar
+ * cambiando solo esta. */
+int _comparar_claves(tipoclave cl1, tipoclave cl2) {
+    if(strcmp(cl1,cl2) == 0){
+        return 0;
+    }else if(strcmp(cl1,cl2) > 0){
+        return 1;
+    }else{
+        return -1;
+    }
+}
+
+//OPERACIONES DE CREACIÓN Y DESTRUCCIÓN
+
 void crear(abb *A) {
-	*A = NULL;
+    *A = NULL;
 }
 
-/*Tree destruction*/
 void destruir(abb *A) {
-	if (*A != NULL) {
-		destruir(&(*A)->izq);	//destruction of the children of the left branch
-		destruir(&(*A)->der);	//destruction of the children of the right branch
-		if (&(*A)->info.lexema != NULL) {//lexeme memory release
-			free((*A)->info.lexema);
-			(*A)->info.lexema = NULL;
-		}
-		free(*A);				//tree memoria release
-		*A = NULL;
-	}
+    if (*A != NULL) {
+        destruir(&(*A)->izq);
+        destruir(&(*A)->der);
+        free((*A)->info.lexema);
+        free(*A);
+        *A = NULL;
+    }
 }
 
-/*INFORMATION OPERATIONS*/
+//OPERACIONES DE INFORMACIÓN
 
-//Determine if the tree is empty
 unsigned es_vacio(abb A) {
-	return A == NULL;
+    return A == NULL;
 }
 
-//Return of the left subtree
 abb izq(abb A) {
-	return A->izq;
+    return A->izq;
 }
 
-//Return of the right subtree
 abb der(abb A) {
-	return A->der;
+    return A->der;
 }
 
-/*MODIFICATION OPERATIONS*/
+void leer(abb A, tipoelem *E) {
+    *E = A->info;
+}
+// Función privada para comparar las claves
 
-/*
- * This function allows the insertion of a lexeme and code in the tree.
- * First of all we check if the cell is empty, if this is the case,
- * the lexeme and the code are introduced and the pointers are initialized to NULL.
- * Otherwise, the lexemes are compared to know if it should go to a left or right branch,
- * recursively calling the function until insertion.
- * */
-void insertar(abb *A, char *lexema, int codigo) {
-	if (es_vacio(*A)) {
-		*A = (abb) malloc(sizeof(struct celda));
-		(*A)->info.lexema = (char*) malloc(strlen(lexema) + 1 * sizeof(char));
-		strcpy((*A)->info.lexema, lexema);
-		(*A)->info.lexema[strlen(lexema)] = '\0';
-		(*A)->info.codigo = codigo;
-		(*A)->izq = NULL;
-		(*A)->der = NULL;
-		return;
-	}
+int _comparar_clave_elem(tipoclave cl, tipoelem E) {
+    return _comparar_claves(cl, _clave_elem(&E));
+}
+//Función privada para informar si una clave está en el árbol
 
-	int comparacion = strcmp(lexema, (*A)->info.lexema);
+unsigned _es_miembro_clave(abb A, tipoclave cl) {
+    if (es_vacio(A)) {
+        return 0;
+    }
+    int comp = _comparar_clave_elem(cl, A->info);
 
-	if (comparacion > 0) {
-		insertar(&(*A)->der, lexema, codigo);
-	} else {
-		insertar(&(*A)->izq, lexema, codigo);
-	}
-
+    if (comp == 0) { //cl == A->info
+        return 1;
+    }
+    if (comp > 0) { //cl > A->info
+        return _es_miembro_clave(der(A), cl);
+    }
+    //cl < A->info
+    return _es_miembro_clave(izq(A), cl);
 }
 
-/*
- * Function that performs the printing of the tree, it works as follows:
- * Check if the node is not empty, if there is a left child it will be called recursively until the end is reached and print the name and value of the lexeme.
- * In the same way, the process is carried out for the children of the right branches
- * */
-void imprimir_tabla(abb *A) {
-	if (!es_vacio(*A)) {
-		if (&(*A)->izq != NULL) {
-			imprimir_tabla(&(*A)->izq);
-			printf("Lexema: %10s", (*A)->info.lexema);
-		}
+//Funciones públicas
 
-		printf("%10s: %-5d\n", "Valor", (*A)->info.codigo);
-
-		if (&(*A)->der != NULL) {
-			imprimir_tabla(&(*A)->der);
-		}
-	}
+unsigned es_miembro(abb A, tipoelem E) {
+    return _es_miembro_clave(A, _clave_elem(&E));
 }
 
-/*
- * Function in charge of searching for a lexeme, comes from the alphanumeric automaton.
- * If no lexeme with the same name is found, an insert is made into the child corresponding to the previous compared node.
- * The insert implies that it is an identifier, so this is returned, otherwise the corresponding code is returned.
- *
- * Return:
- * 		int: lexeme code
- * */
-int buscar_lexema(abb *A, char *lexema) {
-	if (es_vacio(*A)) {
-		insertar(A, lexema, ID);
-		return ID;
-	}
+void buscar_nodo(abb A, tipoclave cl, tipoelem *nodo) {
+    if (es_vacio(A)) {
+        return;
+    }
+    int comp = _comparar_clave_elem(cl, A->info);
 
-	int comp = strcmp(lexema, (*A)->info.lexema);
-	if (comp == 0) {
-		return (*A)->info.codigo;
-	} else if (comp < 0) {
-		return (buscar_lexema(&(*A)->izq, lexema));
-	} else {
-		return (buscar_lexema(&(*A)->der, lexema));
-	}
+    if (comp == 0) { // cl == A->info
+        *nodo = A->info;
+    } else if (comp < 0) { // cl < A->info
+        buscar_nodo(A->izq, cl, nodo);
+    } else { // cl > A->info
+        buscar_nodo(A->der, cl, nodo);
+    }
+}
+//OPERACIONES DE MODIFICACIÓN
 
+/* Funcion recursiva para insertar un nuevo nodo 
+   en el arbol. Se presupone que no existe un nodo
+   con la misma clave en el arbol. */
+void insertar(abb *A, tipoelem E) {
+    if (es_vacio(*A)) {
+        *A = (abb) malloc(sizeof (struct celda));
+        (*A)->info = E;
+        (*A)->izq = NULL;
+        (*A)->der = NULL;
+        return;
+    }
+    tipoclave cl = _clave_elem(&E);
+    int comp = _comparar_clave_elem(cl, (*A)->info);
+    if (comp > 0) {
+        insertar(&(*A)->der, E);
+    } else {
+        insertar(&(*A)->izq, E);
+    }
+}
+/* Funcion privada que devuelve mínimo de subárbol dcho */
+tipoelem _suprimir_min(abb * A) {//Se devuelve el elemento más a la izquierda
+    abb aux;
+    tipoelem ele;
+    if (es_vacio((*A)->izq)) {//Si izquierda vacía, se devuelve valor nodo actual A
+        ele = (*A)->info;
+        aux = *A;
+        *A = (*A)->der;
+        free(aux);
+        return ele;
+    } else {
+        return _suprimir_min(&(*A)->izq); //se vuelve a buscar mínimo rama izquierda
+    }
+}
+
+/* Funcion que permite eliminar un nodo del arbol */
+void suprimir(abb *A, tipoelem E) {
+    abb aux;
+    if (es_vacio(*A)) {
+        return;
+    }
+
+    tipoclave cl = _clave_elem(&E);
+    int comp = _comparar_clave_elem(cl, (*A)->info);
+    if (comp < 0) { //if (E < (*A)->info) {
+        suprimir(&(*A)->izq, E);
+    } else if (comp > 0) { //(E > (*A)->info) {
+        suprimir(&(*A)->der, E);
+    } else if (es_vacio((*A)->izq) && es_vacio((*A)->der)) {
+        free(*A);
+        *A = NULL;
+    } else if (es_vacio((*A)->izq)) { // pero no es vacio derecha
+        aux = *A;
+        *A = (*A)->der;
+        free(aux);
+    } else if (es_vacio((*A)->der)) { //pero no es vacio izquierda
+        aux = *A;
+        *A = (*A)->izq;
+        free(aux);
+    } else { //ni derecha ni izquierda esta vacio, busco mínimo subárbol derecho
+        //pues en su sitio voy a poner el mínimo del subárbol derecho
+        (*A)->info = _suprimir_min(&(*A)->der);
+    }
+}
+
+/* Funcion privada para pasar la clave y no tener que
+   extraerla del nodo en las llamadas recursivas.*/
+void _modificar(abb A, tipoclave cl, tipoelem nodo) {
+    if (es_vacio(A)) {
+        return;
+    }
+    int comp = _comparar_clave_elem(cl, A->info);
+    if (comp == 0) {
+        A->info = nodo;
+    } else if (comp < 0) {
+        _modificar(A->izq, cl, nodo);
+    } else {
+        _modificar(A->der, cl, nodo);
+    }
+}
+
+
+/* Permite modificar el nodo extrayendo del mismo la clave */
+void modificar(abb A, tipoelem nodo) {
+    tipoclave cl = _clave_elem(&nodo);
+    _modificar(A, cl, nodo);
 }
