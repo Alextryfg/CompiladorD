@@ -1,11 +1,6 @@
 #ifndef DEFINICIONS_H_
 #define DEFINITIONS_H_
 
-typedef struct {
-    int codigo;
-    char *lexema;
-}tipoelem;
-
 //Keywords inciales en la tabla de simbolos
 #define IMPORT 300
 #define ID 301  //STD, STDIO, son identificadores

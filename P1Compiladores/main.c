@@ -6,7 +6,9 @@
 
 int main(int argc, char **argv) {
 
-		abrir_archivo("regression.d");
-
+        //PC grande
+		//abrir_archivo("C:\\Users\\USUARIO\\Desktop\\P1Compiladores\\CompiladorD\\P1Compiladores\\regression.d");
+        //Portatil
+        abrirD("C:\\Users\\Usuario\\Desktop\\P1Compilador\\CompiladorD\\P1Compiladores\\regression.d");
 
 }

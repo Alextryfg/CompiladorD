@@ -1,13 +1,16 @@
 #include "abb.h"
+#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+
+///////////////////////// ESTRUCTURAS DE DATOS
 
 struct celda {
     tipoelem info;
     struct celda *izq, *der;
 };
 
+/////////////////////////// INICIO PARTE MODIFICABLE
 
 /*Extraer la clave de una celda */
 tipoclave _clave_elem(tipoelem *E) {
@@ -15,18 +18,22 @@ tipoclave _clave_elem(tipoelem *E) {
 }
 
 /* Esta funcion puente nos permite modificar el tipo de
- * de datos del TAD sin tener que cambiar todas las 
+ * de datos del TAD sin tener que cambiar todas las
  * comparaciones del resto de la biblioteca y en su lugar
  * cambiando solo esta. */
 int _comparar_claves(tipoclave cl1, tipoclave cl2) {
-    if(strcmp(cl1,cl2) == 0){
-        return 0;
-    }else if(strcmp(cl1,cl2) > 0){
-        return 1;
-    }else{
-        return -1;
-    }
+    return strcmp(cl1,cl2)==0 ? 0 : strcmp(cl1,cl2)>0 ? 1 : -1;
 }
+
+/* Si tipoelem tiene alguna estructura que necesite
+ * destruirse ha de hacerse aqui. El uso de esta funcion
+ * permite hacer mas eficiente la destruccion del arbol.*/
+void _destruir_elem(tipoelem *E) {
+    //No se hace nada en la version 1
+}
+
+/////////////////////////// FIN PARTE MODIFICABLE
+/////////////////////////////////////////////////////////////
 
 //OPERACIONES DE CREACIÓN Y DESTRUCCIÓN
 
@@ -38,7 +45,7 @@ void destruir(abb *A) {
     if (*A != NULL) {
         destruir(&(*A)->izq);
         destruir(&(*A)->der);
-        free((*A)->info.lexema);
+        _destruir_elem(&((*A)->info));
         free(*A);
         *A = NULL;
     }
@@ -106,7 +113,7 @@ void buscar_nodo(abb A, tipoclave cl, tipoelem *nodo) {
 }
 //OPERACIONES DE MODIFICACIÓN
 
-/* Funcion recursiva para insertar un nuevo nodo 
+/* Funcion recursiva para insertar un nuevo nodo
    en el arbol. Se presupone que no existe un nodo
    con la misma clave en el arbol. */
 void insertar(abb *A, tipoelem E) {
@@ -154,17 +161,21 @@ void suprimir(abb *A, tipoelem E) {
     } else if (comp > 0) { //(E > (*A)->info) {
         suprimir(&(*A)->der, E);
     } else if (es_vacio((*A)->izq) && es_vacio((*A)->der)) {
+        _destruir_elem(&((*A)->info));
         free(*A);
         *A = NULL;
     } else if (es_vacio((*A)->izq)) { // pero no es vacio derecha
         aux = *A;
         *A = (*A)->der;
+        _destruir_elem(&aux->info);
         free(aux);
     } else if (es_vacio((*A)->der)) { //pero no es vacio izquierda
         aux = *A;
         *A = (*A)->izq;
+        _destruir_elem(&aux->info);
         free(aux);
     } else { //ni derecha ni izquierda esta vacio, busco mínimo subárbol derecho
+        _destruir_elem(&(*A)->info); //elimino la info pero no libero el nodo,
         //pues en su sitio voy a poner el mínimo del subárbol derecho
         (*A)->info = _suprimir_min(&(*A)->der);
     }

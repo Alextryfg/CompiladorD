@@ -1,15 +1,25 @@
 #ifndef ABB_H
 #define ABB_H
-#include "definiciones.h"
 
 /**
  * Tipo de dato abstracto para arbol binario con clave de
  * ordenacion y elemento de celda.
  */
 
-typedef char * tipoclave; // tipo de clave
-		
+///////////////////////////////////////INICIO PARTE MODIFICABLE
+#define L 20
+typedef char *tipoclave;
+
+typedef struct{
+    int codigo;
+    char *lexema;
+
+}tipoelem;
+//////////////////////////////////////////FIN PARTE MODIFICABLE
+
 typedef struct celda * abb;//tipo opaco
+
+/////////////////////////////// FUNCIONES
 
 //FUNCIONES DE CREACIÓN Y DESTRUCCIÓN DEL ÁRBOL
 /**
@@ -87,3 +97,4 @@ void suprimir(abb *A,tipoelem E);
 void modificar(abb A, tipoelem nodo);
 
 #endif	// ABB_H
+
