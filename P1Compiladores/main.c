@@ -16,6 +16,7 @@ int main(int argc, char **argv) {
         //Ahora deberiamos construir la funcion de analisis lexico
 
 
+
         destruirTabla();
 
 }

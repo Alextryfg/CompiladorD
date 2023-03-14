@@ -19,9 +19,7 @@
  *
  */
 
-void identificadores( *comp){
 
-}
 
 
 /*
@@ -63,9 +61,13 @@ void siguiente_componente_lexico(tipoelem *comp){
 
                 //TODO: Recuperar el lexema?
                 //Una vez tenemos el final del elxema
-                devolver()
+                retroceder_puntero();
+
                 //Construimos el lexema
-                //getWord() en el Sistema de entrada tb
+                getLexema(comp,ID);
+
+                //ahora buscamos el elemento en la tabla de simbolos para asi obtener su codigo
+
 
 
                 break;

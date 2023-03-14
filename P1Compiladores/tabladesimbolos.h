@@ -8,7 +8,7 @@ void printTabla();
 
 void destruirTabla();
 
-void findLexema(tipoelem *simb);
+void findCodigo(tipoelem *simb); //ESTA PUEDE SOBRAR PQ YA METO EL CÓDIGO DESDE EL LEXICO
 
 
 #endif	// TABLADESIMBOLOS_H

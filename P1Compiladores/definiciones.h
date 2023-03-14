@@ -20,5 +20,3 @@
 //un codigo para ellos en la tabla de símbolos.
 
 #endif /* DEFINITIONS_H_ */
-
-//ESTO ES DE LO ULTIMO, ES PARA LA TABLA DE SIMBOLOS Y LOS ERRORES

@@ -1,6 +1,7 @@
 
 #include "SistemaEntrada.h"
 #include "gestionerrores.h"
+#include "abb.h"
 //Aqui deberia incluirse la gestion de errores
 #include <stdio.h>
 #include <stdlib.h>
@@ -100,6 +101,9 @@ void cargar_bloque() {
     }
 }
 
+/*
+ * Funcion que ira devolviendo caracteres al analizador lexico
+ */
 char siguiente_caracter(){
 
     char lect;
@@ -149,18 +153,116 @@ char siguiente_caracter(){
     }
 }
 
+/*
+ * Funcion encargada de retroceder el puntero delantero en los centinelas, para que se cumpla que la estructura sea cíclica
+ */
 void retroceder_puntero(){
-    if(cent.bloque == A){
-        if(cent.delantero == 0){ //En caso de estar en la primera pos del primer bloque
+
+    if(cent.bloque == A && cent.delantero == 0){//En caso de estar en la primera pos del primer bloque
+
             //Se retrocede el puntero una posicon
             cent.bloque = B;
             //Por lo que se encontrara en la posicion ultima de B - 1, ya que 2 * N = EOFBloque B
             cent.delantero = N * 2 - 1;
 
-        }else{
-            cent.delantero+M
+    }else if(cent.bloque == B && cent.delantero == N){ //Ultima posicion del bloque A
+            //Cambia de bloque
+            cent.bloque = A;
+            //Retrocede una posicion
+            cent.delantero--;
+
+    }else{
+
+        cent.delantero--;
+
+    }
+}
+
+/*
+ * Funcion para recoger el lexema completo dependiendo de los distintos casos
+ */
+void getLexema(tipoelem *lexema, int codigo){
+
+    int tam = 0; //tamaño del lexema
+    int cont = 0; //
+
+    if(cent.inicio > cent.delantero){
+        tam = (cent.delantero + 2 * N) - cent.inicio;
+    }else{
+        tam = cent.delantero - cent.inicio;
+    }
+
+    if(tam >N){
+        perror("El tamaño del lexema es demasiado grande");
+        cent.inicio = cent.delantero;
+    }else{
+
+        //Reservo memoria para el lexema
+        lexema->lexema = (char*) malloc (sizeof(char)*(tam+1));
+
+
+        //Caso de inicio en A y delantero en B copio la primera parte en del lexema
+        if (cent.inicio < N && cent.delantero >= N ){
+            for(int i = cent.inicio; i < N; i++){
+                lexema->lexema[cont] = cent.centA[i];
+                cont++;
+
+            }
+            //Paso inicio al siguiente bloque
+            cent.inicio = N+1;
+            //Copio el resto del lexema
+            for(int i = cent.inicio; i = cent.delantero; i++ ){
+                lexema->lexema[cont] = cent.centA[i];
+                cont++;
+            }
+        //Caso de inicio en B y delantero en A
+        }else if (cent.inicio > cent.delantero){
+            for(int i = cent.inicio; i < (N*2)+1; i++){
+                lexema->lexema[cont] = cent.centA[i];
+                cont++;
+            }
+            //Paso cent.inicio al inicio del bloque A
+            cent.inicio = 0;
+            for(int i = cent.inicio; i = cent.delantero; i++){
+                lexema->lexema[cont] = cent.centA[i];
+                cont++;
+            }
+
+        }else{ //En caso de estar los dos en el mismo bloque
+            for(int i = cent.inicio; i = cent.delantero; i++){
+                lexema->lexema[cont] = cent.centA[i];
+                cont++;
+            }
+
         }
-    }else if(cent.bloque == B)
+        //Le añadimos el \0 al final del lexema y el codigo
+        lexema->lexema[cont] = '\0';
+        lexema->codigo = codigo;
+
+        if(cont == tam){
+            printf("Todo ha ido correctamente, el contador y el tam son iguales.");
+            printf("%s", lexema->lexema);
+        }
+
+        //TODO:Se supone que falta el caso de la flag avanza, que todavia no se muy bien que es, asi que lo dejare asi.
+
+
+
+
+
+
+    }
+
+
+
+
+
+
+
+
+
 
 }
+
+
 
