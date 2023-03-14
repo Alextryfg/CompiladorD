@@ -118,7 +118,8 @@ char siguiente_caracter(){
                 //Puntero delantero -> Bloque B
                 cent.bloque = B;
                 //TODO: Comprobar caso de retroceder
-
+                cargar_bloque(); //Carga un bloque nuevo
+                printf(cent.centB); //Para ver si se carga el bloque nuevo
                 //Nos devuelve el siguiente caracter que no es EOF
                 lect = siguiente_caracter();
 
@@ -241,9 +242,13 @@ void getLexema(tipoelem *lexema){
         lexema->lexema[cont] = '\0';
         cent.inicio = cent.delantero;
 
-        if(cent.inicio == 61){
-            printf("\ninicio => %d - delantero => %d", cent.inicio, cent.delantero);
+        if(cent.inicio == 63){
+            printf("\ninicio => %d - delantero => %d\n", cent.inicio, cent.delantero);
+            printf(cent.centB); //No carga el siguiente bloque
         }
+
+
+
 
 
 

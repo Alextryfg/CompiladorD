@@ -7,9 +7,10 @@
 int main(int argc, char **argv) {
 
         //PC grande
-		abrirD("C:\\Users\\USUARIO\\Desktop\\P1Compiladores\\CompiladorD\\P1Compiladores\\regression.d");
+		//abrirD("C:\\Users\\USUARIO\\Desktop\\P1Compiladores\\CompiladorD\\P1Compiladores\\regression.d");
         //Portatil
-        //abrirD("C:\\Users\\Usuario\\Desktop\\P1Compilador\\CompiladorD\\P1Compiladores\\regression.d");
+        abrirD("C:\\Users\\Usuario\\Desktop\\P1Compilador\\CompiladorD\\P1Compiladores\\regressionImport.d");
+        //EL PROBLEMA ESTA EN LA LECTURA DE LEXEMAS QUE QUEDAN EN EL MEDIO DE CENTA Y CENTB.
         initTabla();
         printTabla();
 

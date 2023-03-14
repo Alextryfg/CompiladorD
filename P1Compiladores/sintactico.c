@@ -13,7 +13,7 @@ void compilarD(){
 
     //Invoco a siguiente_componente lexico hasta acabar con el archivo
     while(siguiente_componente_lexico(&comp) != -1){
-        printf("\n<%s,%d>", comp.lexema, comp.codigo);
+        printf("\n<%d,%s>", comp.codigo, comp.lexema);
 
         //Se libera la memoria del lexema
         if(comp.lexema!=NULL){
