@@ -7,8 +7,15 @@
 int main(int argc, char **argv) {
 
         //PC grande
-		//abrir_archivo("C:\\Users\\USUARIO\\Desktop\\P1Compiladores\\CompiladorD\\P1Compiladores\\regression.d");
+		abrirD("C:\\Users\\USUARIO\\Desktop\\P1Compiladores\\CompiladorD\\P1Compiladores\\regression.d");
         //Portatil
-        abrirD("C:\\Users\\Usuario\\Desktop\\P1Compilador\\CompiladorD\\P1Compiladores\\regression.d");
+        //abrirD("C:\\Users\\Usuario\\Desktop\\P1Compilador\\CompiladorD\\P1Compiladores\\regression.d");
+        initTabla();
+        printTabla();
+
+        //Ahora deberiamos construir la funcion de analisis lexico
+
+
+        destruirTabla();
 
 }

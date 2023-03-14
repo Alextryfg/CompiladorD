@@ -203,3 +203,23 @@ void modificar(abb A, tipoelem nodo) {
     tipoclave cl = _clave_elem(&nodo);
     _modificar(A, cl, nodo);
 }
+
+/*
+ * Funcion auxiliar recursiva de print de la tabla
+ */
+void _printTabla(abb *A){
+
+    if (!es_vacio(*A)) {
+        if (&(*A)->izq != NULL) {
+            _printTabla(&(*A)->izq);
+            printf("\nLexema: %14s", (*A)->info.lexema);
+        }
+
+        printf("%15s: %-3d", "Codigo", (*A)->info.codigo);
+
+        if (&(*A)->der != NULL) {
+            _printTabla(&(*A)->der);
+        }
+    }
+
+}

@@ -5,8 +5,6 @@
  * Tipo de dato abstracto para arbol binario con clave de
  * ordenacion y elemento de celda.
  */
-
-///////////////////////////////////////INICIO PARTE MODIFICABLE
 #define L 20
 typedef char *tipoclave;
 
@@ -15,11 +13,8 @@ typedef struct{
     char *lexema;
 
 }tipoelem;
-//////////////////////////////////////////FIN PARTE MODIFICABLE
 
 typedef struct celda * abb;//tipo opaco
-
-/////////////////////////////// FUNCIONES
 
 //FUNCIONES DE CREACIÓN Y DESTRUCCIÓN DEL ÁRBOL
 /**
@@ -95,6 +90,13 @@ void suprimir(abb *A,tipoelem E);
  * @param nodo
  */
 void modificar(abb A, tipoelem nodo);
+
+/**
+ * Imprime todos los nodos del arbol A
+ * @param A
+ */
+void _printTabla(abb *A);
+
 
 #endif	// ABB_H
 

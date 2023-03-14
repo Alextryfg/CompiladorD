@@ -149,3 +149,18 @@ char siguiente_caracter(){
     }
 }
 
+void retroceder_puntero(){
+    if(cent.bloque == A){
+        if(cent.delantero == 0){ //En caso de estar en la primera pos del primer bloque
+            //Se retrocede el puntero una posicon
+            cent.bloque = B;
+            //Por lo que se encontrara en la posicion ultima de B - 1, ya que 2 * N = EOFBloque B
+            cent.delantero = N * 2 - 1;
+
+        }else{
+            cent.delantero+M
+        }
+    }else if(cent.bloque == B)
+
+}
+
