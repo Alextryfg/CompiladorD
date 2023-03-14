@@ -20,14 +20,11 @@
  */
 
 
-
-
 /*
  * Funcion encargada de devolver el componente lexico que será procesado por el Analizador sintáctico
  */
 int siguiente_componente_lexico(tipoelem *comp){
     int accept = 0;
-    int a = 0;
     int state = 0;
     char c = '\0';
 
@@ -62,10 +59,9 @@ int siguiente_componente_lexico(tipoelem *comp){
                 //Se comprueba que cumpla las condiciones de D
                 while(isalpha(c) || isdigit(c) || c == '_'){
                     c = siguiente_caracter();
+
                 }
                 //Salgo del while, y por lo tanto el lexema esta formado
-
-                //TODO: Recuperar el lexema?
                 //Una vez tenemos el final del elxema
                 retroceder_puntero();
 
@@ -100,6 +96,12 @@ int siguiente_componente_lexico(tipoelem *comp){
                 //1_234 Bien
                 //_2121 Mal
                 //  Si encuentras un '.' o una 'e' o 'E' es float
+
+                break;
+
+
+            default:
+                return -1;
 
 
 

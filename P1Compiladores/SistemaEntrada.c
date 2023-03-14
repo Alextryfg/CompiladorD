@@ -32,8 +32,8 @@ typedef struct {
 FILE *fichero;
 int p_lecture = 0;
 centinela cent;
-int retroceder = 0; //Marcando que no es necesario el retroceso
-int avanzar = 0; //Todavia no se para que será esto
+int Recarga = 1; //Marcando que no es necesario el retroceso
+int intermedio = 0; //Caso en el que el lexema se queda en el medio de los dos bloques
 
 /*
  * Inicializo el centenila para posicionar el puntero delantero e inicio en la posicion 0. Ademas de colocar
@@ -93,12 +93,14 @@ void cargar_bloque() {
     if (cent.bloque == A) {
         //Leemos los caracteres del fichero regression.d
         p_lecture += fread(cent.centA, sizeof(char), N, fichero);
+        cent.delantero= 0;
         //TODO: Comprobar si lexema sobrepasa al bloque para caso A y B
 
     } else if (cent.bloque == B) {
-        //Leemos los caracteres del fichero regression.d
+        //Leemos los caracteres del fichero regression.d para cargarlo en B
         p_lecture += fread(cent.centB, sizeof(char), N, fichero);
     }
+
 }
 
 /*
@@ -118,10 +120,10 @@ char siguiente_caracter(){
                 //Puntero delantero -> Bloque B
                 cent.bloque = B;
                 //TODO: Comprobar caso de retroceder
-                cargar_bloque(); //Carga un bloque nuevo
-                printf(cent.centB); //Para ver si se carga el bloque nuevo
+                 //Para ver si se carga el bloque nuevo
                 //Nos devuelve el siguiente caracter que no es EOF
                 lect = siguiente_caracter();
+
 
             }else{ //Si
 
@@ -141,8 +143,8 @@ char siguiente_caracter(){
         if(lect == EOF){
             if(!feof(fichero)){
                 cent.bloque = A;
+                //Si es EOF, no debe devolver el EOF, si no el siguiente caracter, es decir el de la pos 65
                 //TODO: Comprobar caso de retroceder
-
                 lect = siguiente_caracter();
 
             }else{
@@ -167,6 +169,7 @@ void retroceder_puntero(){
             cent.bloque = B;
             //Por lo que se encontrara en la posicion ultima de B - 1, ya que 2 * N = EOFBloque B
             cent.delantero = N * 2 - 1;
+
 
     }else if(cent.bloque == B && cent.delantero == N){ //Ultima posicion del bloque A
             //Cambia de bloque
@@ -242,22 +245,7 @@ void getLexema(tipoelem *lexema){
         lexema->lexema[cont] = '\0';
         cent.inicio = cent.delantero;
 
-        if(cent.inicio == 63){
-            printf("\ninicio => %d - delantero => %d\n", cent.inicio, cent.delantero);
-            printf(cent.centB); //No carga el siguiente bloque
-        }
-
-
-
-
-
-
         //TODO:Se supone que falta el caso de la flag avanza, que todavia no se muy bien que es, asi que lo dejare asi.
-
-
-
-
-
 
     }
 
