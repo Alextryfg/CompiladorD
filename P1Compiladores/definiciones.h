@@ -11,6 +11,7 @@
 #define FOREACH 306
 #define RETURN 307
 #define VOID 308
+#define CAST 309
 
 //Operadores
 #define OPERADOR 400

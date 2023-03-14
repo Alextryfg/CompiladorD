@@ -13,9 +13,11 @@ int main(int argc, char **argv) {
         initTabla();
         printTabla();
 
-        //Ahora deberiamos construir la funcion de analisis lexico
+        //Ahora deberiamos construir la funcion de analisis sintactico
+        compilarD();
 
-
+        //Imprimimos la tabla de nuevo
+        printTabla();
 
         destruirTabla();
 

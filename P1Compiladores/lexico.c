@@ -25,24 +25,30 @@
 /*
  * Funcion encargada de devolver el componente lexico que será procesado por el Analizador sintáctico
  */
-void siguiente_componente_lexico(tipoelem *comp){
+int siguiente_componente_lexico(tipoelem *comp){
     int accept = 0;
     int a = 0;
     int state = 0;
-    char c;
+    char c = '\0';
 
     //Mientras el lexema no sea aceptado
     while(!accept){
         switch (state){
             case 0:
                 c = siguiente_caracter();
-                if(c == ' ' || c == '\t'){
-
-                }else if (isalpha(c) || c == '_'){
-                    state = 2;
+                if(c == ' ' || c == '\t' || c== '.' || c == ';' || c == '}' || c == '{' || c == '(' || c == ')' || c == '\n'){
+                    comp->codigo=c;
+                    getLexema(comp);
+                    accept=1;
                     break;
 
-                }else if (isdigit(c)){
+                }else if (isalpha(c) || c == '_'){ //IDENTIFICADORES
+                    state = 1;
+                    break;
+
+                }else if (isdigit(c)){ //NUMEROS
+                    state = 2;
+                    break;
 
                 }
             case 1:
@@ -63,11 +69,14 @@ void siguiente_componente_lexico(tipoelem *comp){
                 //Una vez tenemos el final del elxema
                 retroceder_puntero();
 
-                //Construimos el lexema
-                getLexema(comp,ID);
+                //Construimos el lexema añadiendo directamente su codigo correspondiente.
+                getLexema(comp);
 
-                //ahora buscamos el elemento en la tabla de simbolos para asi obtener su codigo
+                //Asocio el codigo
+                comp->codigo= ID;
 
+                //Informamos de que se acepta el lexema
+                accept=1;
 
 
                 break;
@@ -75,15 +84,30 @@ void siguiente_componente_lexico(tipoelem *comp){
 
             case 2:
 
+                //Se obtiene el siguiente caracter
+                c = siguiente_caracter();
+
+                //CONDICIONES INTEGER
+                while(isdigit(c)){
+                    c = siguiente_caracter();
+                }
+                //0b1010101
+                //0B10010110
+
+                //Solo depsues de un digito se puede barrabaja
+                //0b_ MAL
+                //0b1___ Bien
+                //1_234 Bien
+                //_2121 Mal
+                //  Si encuentras un '.' o una 'e' o 'E' es float
+
+
+
 
 
 
         }
 
     }
-
-
-
-
-
+    return comp->codigo;
 }

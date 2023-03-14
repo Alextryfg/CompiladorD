@@ -151,6 +151,8 @@ char siguiente_caracter(){
             cent.delantero++;
         }
     }
+    //Devolvemos el caracter leido
+    return lect;
 }
 
 /*
@@ -181,7 +183,7 @@ void retroceder_puntero(){
 /*
  * Funcion para recoger el lexema completo dependiendo de los distintos casos
  */
-void getLexema(tipoelem *lexema, int codigo){
+void getLexema(tipoelem *lexema){
 
     int tam = 0; //tamaño del lexema
     int cont = 0; //
@@ -211,7 +213,7 @@ void getLexema(tipoelem *lexema, int codigo){
             //Paso inicio al siguiente bloque
             cent.inicio = N+1;
             //Copio el resto del lexema
-            for(int i = cent.inicio; i = cent.delantero; i++ ){
+            for(int i = cent.inicio; i < cent.delantero; i++ ){
                 lexema->lexema[cont] = cent.centA[i];
                 cont++;
             }
@@ -223,13 +225,13 @@ void getLexema(tipoelem *lexema, int codigo){
             }
             //Paso cent.inicio al inicio del bloque A
             cent.inicio = 0;
-            for(int i = cent.inicio; i = cent.delantero; i++){
+            for(int i = cent.inicio; i < cent.delantero; i++){
                 lexema->lexema[cont] = cent.centA[i];
                 cont++;
             }
 
         }else{ //En caso de estar los dos en el mismo bloque
-            for(int i = cent.inicio; i = cent.delantero; i++){
+            for(int i = cent.inicio; i < cent.delantero; i++){
                 lexema->lexema[cont] = cent.centA[i];
                 cont++;
             }
@@ -237,12 +239,13 @@ void getLexema(tipoelem *lexema, int codigo){
         }
         //Le añadimos el \0 al final del lexema y el codigo
         lexema->lexema[cont] = '\0';
-        lexema->codigo = codigo;
+        cent.inicio = cent.delantero;
 
-        if(cont == tam){
-            printf("Todo ha ido correctamente, el contador y el tam son iguales.");
-            printf("%s", lexema->lexema);
+        if(cent.inicio == 61){
+            printf("\ninicio => %d - delantero => %d", cent.inicio, cent.delantero);
         }
+
+
 
         //TODO:Se supone que falta el caso de la flag avanza, que todavia no se muy bien que es, asi que lo dejare asi.
 

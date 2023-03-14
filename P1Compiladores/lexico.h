@@ -2,7 +2,7 @@
 #define LEXICO_H
 #include "abb.h"
 
-void siguiente_componente_lexico(tipoelem *comp);
+int siguiente_componente_lexico(tipoelem *comp);
 
 
 #endif	// LEXICO_H

@@ -9,7 +9,7 @@ char siguiente_caracter();
 
 void retroceder_puntero(); //Comprobamos la pos de delantero y la retrasamos una pos (Devolver_puntero)
 
-void getLexema(tipoelem *lexema, int codigo); //recupera lexema
+void getLexema(tipoelem *lexema); //recupera lexema
 
 void aceptar_lexema(); //aceptar
 
