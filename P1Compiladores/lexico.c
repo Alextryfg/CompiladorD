@@ -33,7 +33,7 @@ int siguiente_componente_lexico(tipoelem *comp){
         switch (state){
             case 0:
                 c = siguiente_caracter();
-                if(c == ' ' || c == '\t' || c== '.' || c == ';' || c == '}' || c == '{' || c == '(' || c == ')' || c == '\n'){
+                if(c == ' ' || c == '\t' || c == '\r' || c == '\n' || c== '.' || c == ';' || c == '}' || c == '{' || c == '(' || c == ')' ){
                     comp->codigo=c;
                     getLexema(comp);
                     accept=1;
@@ -61,8 +61,7 @@ int siguiente_componente_lexico(tipoelem *comp){
                     c = siguiente_caracter();
 
                 }
-                //Salgo del while, y por lo tanto el lexema esta formado
-                //Una vez tenemos el final del elxema
+                //Una vez detecta el separador de lexema, retrocede el puntero para no perder el caracter separador
                 retroceder_puntero();
 
                 //Construimos el lexema añadiendo directamente su codigo correspondiente.

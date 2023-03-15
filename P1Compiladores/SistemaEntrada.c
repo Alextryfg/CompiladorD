@@ -29,79 +29,61 @@ typedef struct {
 
 //Estas son las variables globales
 
-FILE *fichero;
+FILE *file;
 int p_lecture = 0;
 centinela cent;
-int Recarga = 1; //Marcando que no es necesario el retroceso
-int intermedio = 0; //Caso en el que el lexema se queda en el medio de los dos bloques
+
+void cargar_bloque();
 
 /*
- * Inicializo el centenila para posicionar el puntero delantero e inicio en la posicion 0. Ademas de colocar
- * el bloque actual de centinela en A y los EOF de los dos centinelas.
+ * Inicializacion del sistema de entrada
  */
-void initCentinelas() {
+void init(char *input){
+
+    file = fopen(input, "r");
+
+    if (file == NULL){
+        perror("Error en fopen");
+    }
+
     cent.inicio = 0;
     cent.delantero = 0;
     cent.bloque = A;
     cent.centA[N] = EOF;
     cent.centB[N] = EOF;
-}
 
-/*
- * Abro el archivo y cargo el primer bloque en el centinela A
- */
-void abrirD(char *archivo) {
-    //Abrimos el archivo en el file fichero
-    if ((fichero = fopen(archivo, "r")) != NULL) {
-        //Inicializo los centinelas
-        initCentinelas();
-        // Leo 2N caracteres del archivo, y los almaceno en el centinela A y B
-        p_lecture=fread(cent.centA, sizeof(char),N, fichero);
-        //Posicion actual de puntero de lectura
-        p_lecture = ftell(fichero);
-        printf(cent.centA);
-
-    } else{
-        //errorArchivo(1);
-        perror("Error durante fopen");
-        exit(0);
-    }
+    cargar_bloque();
 
 }
 
 /*
- *
  * Cerramos el archivo
- *
- * */
-
+*/
 void cerrarD() {
-    fclose(fichero);
+    fclose(file);
 }
 
 /*
- *
  * Funcion utilizada para cargar los bloques en los distintos centinelas.
- *
 */
 void cargar_bloque() {
 
     //Posicionamos el puntero de lectura en p_lecture
-    fseek(fichero, p_lecture, SEEK_SET);
+    fseek(file, p_lecture, SEEK_SET);
 
     //Comprobamos el bloque en el que nos encontramos
     if (cent.bloque == A) {
-        //Leemos los caracteres del fichero regression.d
-        p_lecture += fread(cent.centA, sizeof(char), N, fichero);
-        cent.delantero= 0;
+        //Leemos los caracteres del file regression.d
+        p_lecture += fread(cent.centA, sizeof(char), N, file);
         //TODO: Comprobar si lexema sobrepasa al bloque para caso A y B
 
     } else if (cent.bloque == B) {
-        //Leemos los caracteres del fichero regression.d para cargarlo en B
-        p_lecture += fread(cent.centB, sizeof(char), N, fichero);
+        //Leemos los caracteres del file regression.d para cargarlo en B
+        p_lecture += fread(cent.centB, sizeof(char), N, file);
     }
 
 }
+
 
 /*
  * Funcion que ira devolviendo caracteres al analizador lexico
@@ -111,14 +93,22 @@ char siguiente_caracter(){
     char lect;
     //Comprobamos en que bloque se encuentran los punteros y por lo tanto de quien es el turno, si es de A
     if(cent.bloque == A){
+
         //asignamos el caracter en el que se encuentra el puntero delantero a el char lect
         lect = cent.centA[cent.delantero];
+
         //EOF?
         if(lect == EOF){
+
+            printf("EOF");
+            exit(0);
+
             //Final archivo?
-            if(!feof(fichero)){ //No
+            if(!feof(file)){ //No
+
                 //Puntero delantero -> Bloque B
                 cent.bloque = B;
+                cent.delantero = N+2; //Primera posicion del bloque B
                 //TODO: Comprobar caso de retroceder
                  //Para ver si se carga el bloque nuevo
                 //Nos devuelve el siguiente caracter que no es EOF
@@ -140,8 +130,11 @@ char siguiente_caracter(){
     }else if (cent.bloque == B){
 
         lect = cent.centB[cent.delantero];
+
         if(lect == EOF){
-            if(!feof(fichero)){
+
+            if(!feof(file)){
+
                 cent.bloque = A;
                 //Si es EOF, no debe devolver el EOF, si no el siguiente caracter, es decir el de la pos 65
                 //TODO: Comprobar caso de retroceder
@@ -171,7 +164,7 @@ void retroceder_puntero(){
             cent.delantero = N * 2 - 1;
 
 
-    }else if(cent.bloque == B && cent.delantero == N){ //Ultima posicion del bloque A
+    }else if(cent.bloque == B && cent.delantero == N+1){ //Ultima posicion del bloque A
             //Cambia de bloque
             cent.bloque = A;
             //Retrocede una posicion
@@ -246,7 +239,6 @@ void getLexema(tipoelem *lexema){
         cent.inicio = cent.delantero;
 
         //TODO:Se supone que falta el caso de la flag avanza, que todavia no se muy bien que es, asi que lo dejare asi.
-
     }
 
 
