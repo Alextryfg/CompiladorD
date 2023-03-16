@@ -311,11 +311,18 @@ void getLexema(tipoelem *lexema){
                 }
             /* Si esta en el bloque B */
             }else{
-
-                for(int i = cent.inicio; i < cent.delantero; i++){
-                    lexema->lexema[cont] = cent.centB[i-(N+1)];
-                    cont++;
+                if(cent.centB[cent.inicio] == EOF){
+                    for(int i = cent.inicio+1; i < cent.delantero; i++){
+                        lexema->lexema[cont] = cent.centB[i-(N+1)]; //VAlor absoluto? o cambiar N+1 por N en la resta?
+                        cont++;
+                    }
+                }else{
+                    for(int i = cent.inicio; i < cent.delantero; i++){
+                        lexema->lexema[cont] = cent.centB[i-(N+1)]; //VAlor absoluto? o cambiar N+1 por N en la resta?
+                        cont++;
+                    }
                 }
+
 
             }
 

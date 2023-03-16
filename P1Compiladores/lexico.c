@@ -62,9 +62,9 @@ int siguiente_componente_lexico(tipoelem *comp){
 
                 //Separador o TOKENs
                 if(c == ' ' || c == '\t' || c == '\r' || c == '\n' || c== '.' || c == ';' || c == '}' || c == '{' || c == '(' || c == ')' || c == '['
-                || c == ']' || c == ',' || c == '*' || c == '<' || c == '>' || c == '%'){
+                || c == ']' || c == ',' || c == '*' || c == '<' || c == '>' || c == '%' || c == '-'){
                     //Subseccion para Operadores Simples
-                    if( c == '*' || c == '<' || c == '>' || c == '-' ){
+                    if( c == '*' || c == '<' || c == '>' || c == '-'){
                         comp->codigo=OPERADORSIMPLE;
                         _formarLexema(comp,0);
                         accept = 1;
@@ -90,12 +90,6 @@ int siguiente_componente_lexico(tipoelem *comp){
                 //String?
                 }else if(c == '"'){ //STRING?
                     state = 5;
-                //Caso especial para '-'
-                }else if(c == '-'){ //
-                    comp->codigo=OPERADORSIMPLE;
-                    _formarLexema(comp,0);
-                    accept = 1;
-                //EOF?
                 }else if(c == EOF){
                     comp->codigo=-1;
                     accept = 1;
@@ -395,6 +389,7 @@ int siguiente_componente_lexico(tipoelem *comp){
                 accept = 1;
 
                 break;
+
         }
 
     }

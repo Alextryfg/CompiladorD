@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "lexico.h"
 #include "definiciones.h"
 #include "abb.h"
@@ -24,6 +25,7 @@ void _printComp(tipoelem comp){
     }
 
 }
+int a = 0;
 
 /*
  * Funcion en cargada de ir pidiendo componentes lexicos al analizador lexico, liberando memoria e imprimiendo por pantalla el resultado
