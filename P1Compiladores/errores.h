@@ -2,4 +2,4 @@
 /*
  * Funcion de gestion de errores
  */
-void errorGestion(int idCodigo);
+void errorD(int idCodigo);

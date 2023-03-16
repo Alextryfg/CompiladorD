@@ -42,7 +42,7 @@ void init(char *input){
     /* Error en caso de fallo en fopen */
 
     if (file == NULL){
-        perror("Error en fopen");
+        errorD(1);
     }
 
     /* Incializo punteros, bloque actual y centinelas */
@@ -84,6 +84,10 @@ void cargar_bloque() {
         /* Leemos los caracteres del file regression.d para cargarlos en A */
 
         p_lecture += fread(cent.centB, sizeof(char), N, file);
+    }else{
+
+        errorD(3);
+
     }
 
     /* p_lecture almacena la posicon a leer del fichero */
@@ -247,7 +251,7 @@ void getLexema(tipoelem *lexema){
     //Si el lexema tiene un tamaño mayor o igual al bloque
     //|h|o|l|o|-|c|a|u|s|t|o|
     if(tam >=N){
-        perror("El tamaño del lexema es demasiado grande");
+        errorD(2);
         igualarPunteros();
     }
     //Si el lexema tiene un tamaño menor

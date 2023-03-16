@@ -4,6 +4,7 @@
 #include "tabladesimbolos.h"
 #include "sistemaEntrada.h"
 #include "abb.h"
+#include "errores.h"
 
 /*
  * Automatas a definir:
@@ -355,7 +356,7 @@ int siguiente_componente_lexico(tipoelem *comp){
                     if(isdigit(c) || c == '-' || c == '+'){
                         c = siguiente_caracter();
                     }else{
-                        perror("MAL FORMADO EL EXPONENTE");
+                        errorD(4);
                     }
                     while(isdigit(c)){
                         c = siguiente_caracter();
