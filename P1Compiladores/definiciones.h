@@ -12,6 +12,7 @@
 #define RETURN 307
 #define VOID 308
 #define CAST 309
+#define DOUBLE 310
 
 //Operadores
 #define OPERADORSUMASUMA 400

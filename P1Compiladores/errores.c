@@ -1,0 +1,1 @@
+void errorGestion(int idCodigo);

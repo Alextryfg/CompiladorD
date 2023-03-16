@@ -10,7 +10,7 @@ abb tabla;
 
 tipoelem initial[] = {{"identificador", ID},{"import", IMPORT},
                     {"string", STRING}, {"int", INT}, {"float", FLOAT}, {"while", WHILE},
-                    {"foreach", FOREACH}, {"return", RETURN}, {"void", VOID}, {"cast", CAST}};
+                    {"foreach", FOREACH}, {"return", RETURN}, {"void", VOID}, {"cast", CAST}, {"double", DOUBLE} };
 
 /*
  * Funcion auxiliar para insertar en la tabla de simbolos, las keywords iniciales
@@ -28,7 +28,7 @@ void insertSimbol(tipoelem keys){
 void initTabla() {
 
     crear(&tabla);
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 11; i++)
         insertSimbol(initial[i]);
 
 }
