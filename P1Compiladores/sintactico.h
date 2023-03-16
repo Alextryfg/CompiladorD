@@ -3,7 +3,7 @@
 #include "abb.h"
 
 /*
- * Funcion que compila el proyecto invocando a siguiente_comp_lexico cuando sea necesario
+ * Funcion en cargada de ir pidiendo componentes lexicos al analizador lexico, liberando memoria e imprimiendo por pantalla el resultado
  */
 void compilarD();
 

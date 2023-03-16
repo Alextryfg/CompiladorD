@@ -1,7 +1,5 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <ctype.h>
-#include <string.h>
 #include "definiciones.h"
 #include "tabladesimbolos.h"
 #include "sistemaEntrada.h"
@@ -10,12 +8,14 @@
 /*
  * Automatas a definir:
  *
- *  integers:
- *  identificadores:
- *  keywords:
- *  Strings:
- *  floats:
- *  Operadores:
+ *  Operadores simples: Caso 0;
+ *  Delimitadores: Caso 0;
+ *  identificadores: Caso 1;
+ *  keywords: Caso 1;
+ *  integers: Caso 2;
+ *  Operadores Dobles: Caso 4;
+ *  Strings: Caso 5;
+ *  floats: Caso 6;
  *
  */
 
@@ -24,10 +24,12 @@
  */
 void _formarLexema(tipoelem *comp,int retroceso){
 
+    //Dependiendo del lexema será necesario retroceder el puntero delantero
     if(retroceso){
         retroceder_puntero();
     }
 
+    //Cargo el lexema en comp
     getLexema(comp);
 
     //Caso especial para keyWords
@@ -58,13 +60,15 @@ int siguiente_componente_lexico(tipoelem *comp){
                 //Siguiente caracter
                 c = siguiente_caracter();
 
-                //Separador?
+                //Separador o TOKENs
                 if(c == ' ' || c == '\t' || c == '\r' || c == '\n' || c== '.' || c == ';' || c == '}' || c == '{' || c == '(' || c == ')' || c == '['
                 || c == ']' || c == ',' || c == '*' || c == '<' || c == '>' || c == '%'){
-                    if( c == '*' || c == '<' || c == '>' ){
+                    //Subseccion para Operadores Simples
+                    if( c == '*' || c == '<' || c == '>' || c == '-' ){
                         comp->codigo=OPERADORSIMPLE;
                         _formarLexema(comp,0);
                         accept = 1;
+                    //En TOKENs simplemente devuelvo el ASCII
                     }else{
                         comp->codigo = c;
                         _formarLexema(comp,0);
@@ -72,21 +76,28 @@ int siguiente_componente_lexico(tipoelem *comp){
                     }
 
                 //Identificador?
-                }else if (isalpha(c) || c == '_'){ //IDENTIFICADORES Y ALFANUMERICOS
+                }else if (isalpha(c) || c == '_'){ //IDENTIFICADORES
                     state = 1;
                 //Numeros?
-                }else if (isdigit(c)){ //NUMEROS
+                }else if (isdigit(c)){ //NUMEROS (Se separa mas tarde en INTs y FLOATs)
                     state = 2;
                 //Comentario?
-                }else if(c == '/'){
+                }else if(c == '/'){ //COMENTARIOS
                     state = 3;
-                //Doble Operador
-                }else if(c == '+' || c == '='){
+                //Doble Operador?
+                }else if(c == '+' || c == '='){  //DOBLEOPERADOR?
                     state = 4;
-                }else if(c == '"'){
+                //String?
+                }else if(c == '"'){ //STRING?
                     state = 5;
+                //Caso especial para '-'
+                }else if(c == '-'){ //
+                    comp->codigo=OPERADORSIMPLE;
+                    _formarLexema(comp,0);
+                    accept = 1;
+                //EOF?
                 }else if(c == EOF){
-                    printf("EOOOOOOF");
+                    comp->codigo=-1;
                     accept = 1;
                 }
 
@@ -105,9 +116,19 @@ int siguiente_componente_lexico(tipoelem *comp){
 
                 }
 
+                /*
+                 * El caso de EOF
+                 */
+                if(c == EOF){
+                    comp->codigo=-1;
+                    accept = 1;
+                    break;
+                }
+
                 //Asocio el codigo
                 comp->codigo= ID;
 
+                //Formo el lexema
                 _formarLexema(comp,1);
 
                 //Informamos de que se acepta el lexema
@@ -124,7 +145,8 @@ int siguiente_componente_lexico(tipoelem *comp){
                  * Binary integers are a sequence of binary digits preceded by a ‘0b’ or ‘0B’.
                  */
 
-                if(c == 0){
+                //Empieza por 0, posibilidad de binario
+                if(c == '0'){
                     c = siguiente_caracter();
                     //Si hay una B o b despues del 0, binario
                     if ( c == 'b' || c == 'B'){
@@ -142,9 +164,10 @@ int siguiente_componente_lexico(tipoelem *comp){
                 }else{
                     c = siguiente_caracter();
                     //Los integers pueden tener las _ por el medio que sean
-                    while( c == '_' || isdigit(c)){
+                    while( c == '_' || isdigit(c)) {
                         c = siguiente_caracter();
-                        //. , e o E significa FLOAR
+                    }
+                        //. , e o E significa FLOAT
                         if(c == '.' || c == 'e' || c == 'E') {
                             //Estado de los float
                             state = 6;
@@ -153,13 +176,19 @@ int siguiente_componente_lexico(tipoelem *comp){
                             comp->codigo= INT;
                         }
                     }
-                }
+                    //En cualquier otro caso se asigna int al codigo
+                    comp->codigo=INT;
 
-                //Formo el lexema
-                _formarLexema(comp,1);
+                    //Si no esta en el estado 6, quiere decir que detecto INT, si no es FLOAT
+                    if(comp->codigo == INT && state!= 6){
+                        //Formo el lexema
+                        _formarLexema(comp,1);
 
-                //Acepto el lexema
-                accept=1;
+                        //Acepto el lexema
+                        accept=1;
+
+                    }
+
 
                 break;
 
@@ -186,7 +215,7 @@ int siguiente_componente_lexico(tipoelem *comp){
                     int juntos = 0;
 
                     while(juntos == 0){
-
+                        //Caso de '*/' que señala el fin del comentario
                         if(c == '*'){
                             c = siguiente_caracter();
                             if(c == '/'){
@@ -222,15 +251,19 @@ int siguiente_componente_lexico(tipoelem *comp){
                 //Caso de que no es ningun tipo de comentario, por lo que se ira al automata de los operadores
                 }else{
 
+                    //Es decir encontramos '/' a solas
                     comp->codigo = OPERADORSIMPLE;
 
-                    _formarLexema(comp,0);
+                    //Elemento individual por lo que requiere retroceso de puntero delantero
+                    _formarLexema(comp,1);
 
+                    //Se acepta el lexema
                     accept = 1;
 
                 }
+                //En caso de ser un comentario
 
-                //Igualamos los punteros para ignorar los comentarios
+                //Igualamos los punteros para ignorarlo
                 igualarPunteros();
 
                 //Volvemos al estado inicial
@@ -238,11 +271,15 @@ int siguiente_componente_lexico(tipoelem *comp){
                 break;
 
             case 4:
+                /*
+                 * Este caso seran los TOKENs que se reflejan en el manual
+                 */
+
                 //(==)
                 if(c == '='){
                     c = siguiente_caracter();
                     if(c == '='){
-                        comp->codigo = OPERADORSUMASUMA;
+                        comp->codigo = OPERADORDOSIGUAL;
                     }else{ //En otro caso operador normal
                         comp->codigo = OPERADORSIMPLE;
                     }
@@ -259,6 +296,7 @@ int siguiente_componente_lexico(tipoelem *comp){
                     }
                 }
 
+                // Si es un operador simple, se necesita el retroceso del puntero
                 if(comp->codigo == OPERADORSIMPLE){
                     _formarLexema(comp,1);
                 }else{
@@ -272,6 +310,14 @@ int siguiente_componente_lexico(tipoelem *comp){
                 break;
 
             case 5:
+                /*
+                 * A string literal is either a double quoted string, a wysiwyg quoted string, a delimited string, or a token string.
+                 * In all string literal forms, an EndOfLine is regarded as a single \n character.
+                 * String literals are read only.
+                 * Undefined Behavior: writing to a string literal. This is not allowed in @safe code.
+                 */
+
+                /* Solo añadiremos los del codigo: ("") , en caso de \" no se detecta la comilla porque esta escapada */
 
                 //Mientras el codigo no sea String
                 while ( comp->codigo != STRING){
@@ -279,8 +325,8 @@ int siguiente_componente_lexico(tipoelem *comp){
                     //Si es otra barra se acaba el string
                     if( c == '"'){
                         comp->codigo = STRING;
-                        //Si es una '\' se puede poner '\"' sin que acabe
-                    }else if(c == 92){
+                        //Si es una '\' se puede poner '\"' sin que acabe al escaparse
+                    }else if(c == '\\'){
                         c = siguiente_caracter();
                         //Aqui esta el '\"'
                         if( c == '"'){
@@ -290,7 +336,7 @@ int siguiente_componente_lexico(tipoelem *comp){
                 }
 
 
-                //Fomramos el lexema
+                //Formamos el lexema
                 _formarLexema(comp,0);
 
                 //Aceptamos el lexema
@@ -300,8 +346,18 @@ int siguiente_componente_lexico(tipoelem *comp){
 
             case 6:
                 //FLOATS
+                /*
+                 * 2.645_751
+                 * 6.022140857E+23
+                 * 6_022.140857E+20
+                 * 6_022_.140_857E+20_
+                 */
+                /* De nuevo, haremos hincapie en los que aparecen en el codigo regression.d */
+
+                //Exponente (
                 if(c == 'E' || c == 'e'){
                     c = siguiente_caracter();
+                    //Caso: 4e+1
                     if(isdigit(c) || c == '-' || c == '+'){
                         c = siguiente_caracter();
                     }else{
@@ -310,30 +366,39 @@ int siguiente_componente_lexico(tipoelem *comp){
                     while(isdigit(c)){
                         c = siguiente_caracter();
                     }
+                //Caso: 4.0
                 }else if (c == '.'){
                     c = siguiente_caracter();
                     while(isdigit(c)){
                         c = siguiente_caracter();
                     }
+                    //Caso: 4.0e+03
+                    if(c == 'e' || c == 'E'){
+                        c = siguiente_caracter();
+                        if(c == '+'){
+                            c = siguiente_caracter();
+                            while(isdigit(c)){
+                                c = siguiente_caracter();
+                            }
+                        }
+
+                    }
                 }
 
+                //Aigno el codigo de float
                 comp->codigo = FLOAT;
 
+                //Formo el lexema
+                _formarLexema(comp,1);
 
-            default:
-                //return -1;
+                //Acepto el lexema
+                accept = 1;
 
-
-
-
-
-
+                break;
         }
 
     }
 
-
-
-
+    /* Devolvemos al sintactico el código. (Comp se da por referencia por lo que se modifica durante la ejecucion de la funcion */
     return comp->codigo;
 }

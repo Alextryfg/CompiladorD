@@ -29,10 +29,13 @@ int _comparar_claves(tipoclave cl1, tipoclave cl2) {
  * destruirse ha de hacerse aqui. El uso de esta funcion
  * permite hacer mas eficiente la destruccion del arbol.*/
 void _destruir_elem(tipoelem *E) {
-    if (&(E)->lexema != NULL) {//lexeme memory release
-        free((E)->lexema);
-        (*E).lexema = NULL;
+    if(E != NULL){
+        if (E->lexema != NULL) {//lexeme memory release
+            free((E)->lexema);
+            E->lexema = NULL;
+        }
     }
+
 }
 
 /////////////////////////// FIN PARTE MODIFICABLE
@@ -44,15 +47,36 @@ void crear(abb *A) {
     *A = NULL;
 }
 
+
 void destruir(abb *A) {
     if (*A != NULL) {
         destruir(&(*A)->izq);
         destruir(&(*A)->der);
         _destruir_elem(&((*A)->info));
-        free(*A);
-        *A = NULL;
+    }
+    free(*A);
+    *A = NULL;
+}
+
+
+/*
+void destruir(abb *A) {
+    if (es_vacio(*A)) {
+        A = (abb) malloc(sizeof (struct celda));
+        (*A)->info.lex = (char)malloc(sizeof(char) (strlen(E.lex) + 1));
+        strcpy((*A)->info.lex, E.lex);
+        if (*A) {
+            (*A)->info.lex[strlen(E.lex)] = '\0';
+            (*A)->info.codigo = E.;
+            (*A)->der = NULL;
+            (*A)->der = NULL;
+        }
+    return;
     }
 }
+ */
+
+
 
 //OPERACIONES DE INFORMACIÓN
 
@@ -122,10 +146,16 @@ void buscar_nodo(abb A, tipoclave cl, tipoelem *nodo) {
 void insertar(abb *A, tipoelem E) {
     if (es_vacio(*A)) {
         *A = (abb) malloc(sizeof (struct celda));
-        (*A)->info = E;
-        (*A)->izq = NULL;
-        (*A)->der = NULL;
+        (*A)->info.lexema = (char*)malloc(sizeof(char)*(strlen(E.lexema) + 1));
+        strcpy((*A)->info.lexema, E.lexema);
+        if (*A) {
+            (*A)->info.lexema[strlen(E.lexema)] = '\0';
+            (*A)->info.codigo = E.codigo;
+            (*A)->izq = NULL;
+            (*A)->der = NULL;
+        }
         return;
+
     }
     tipoclave cl = _clave_elem(&E);
     int comp = _comparar_clave_elem(cl, (*A)->info);

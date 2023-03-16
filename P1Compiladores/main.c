@@ -1,27 +1,29 @@
 #include "tabladesimbolos.h"
 #include "sintactico.h"
-#include <stdio.h>
-#include <stdlib.h>
 #include "sistemaEntrada.h"
 
 int main(int argc, char **argv) {
 
+        /* Inicializamos el sistema de entrada */
         //PC grande
 		init("C:\\Users\\USUARIO\\Desktop\\P1Compiladores\\P1Compiladores\\regression.d");
         //Portatil
         //init("C:\\Users\\Usuario\\Desktop\\P1Compilador\\CompiladorD\\P1Compiladores\\regressionImport.d");
-        //EL PROBLEMA ESTA EN LA LECTURA DE LEXEMAS QUE QUEDAN EN EL MEDIO DE CENTA Y CENTB.
+
+        /* Inicializamos la tabla de simbolos y la imprimimos por pantalla */
         initTabla();
         printTabla();
 
-        //Ahora deberiamos construir la funcion de analisis sintactico
+        /* Empieza el analisis del sintactico que le pide componentes al analizador lexico */
         compilarD();
 
-        //Imprimimos la tabla de nuevo
+        /* Imprimimos la tabla de nuevo */
         printTabla();
 
-        //Liberamos memoria
+        /* Liberamos la memoria de la tabla */
         destruirTabla();
+
+        /* Cerramos el archivo regression.d */
         cerrarD();
 
 }

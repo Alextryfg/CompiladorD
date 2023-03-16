@@ -56,8 +56,8 @@ build CMakeFiles/CompiladorD.dir/P1Compiladores/abb.c.obj: C_COMPILER__Compilado
   OBJECT_DIR = CMakeFiles\CompiladorD.dir
   OBJECT_FILE_DIR = CMakeFiles\CompiladorD.dir\P1Compiladores
 
-build CMakeFiles/CompiladorD.dir/P1Compiladores/gestionerrores.c.obj: C_COMPILER__CompiladorD_Debug C$:/Users/USUARIO/Desktop/P1Compiladores/P1Compiladores/gestionerrores.c || cmake_object_order_depends_target_CompiladorD
-  DEP_FILE = CMakeFiles\CompiladorD.dir\P1Compiladores\gestionerrores.c.obj.d
+build CMakeFiles/CompiladorD.dir/P1Compiladores/errores.c.obj: C_COMPILER__CompiladorD_Debug C$:/Users/USUARIO/Desktop/P1Compiladores/P1Compiladores/errores.c || cmake_object_order_depends_target_CompiladorD
+  DEP_FILE = CMakeFiles\CompiladorD.dir\P1Compiladores\errores.c.obj.d
   FLAGS = -g -fdiagnostics-color=always -std=gnu11
   INCLUDES = -IC:/Users/USUARIO/Desktop/P1Compiladores/P1Compiladores
   OBJECT_DIR = CMakeFiles\CompiladorD.dir
@@ -106,7 +106,7 @@ build CMakeFiles/CompiladorD.dir/P1Compiladores/tabladesimbolos.c.obj: C_COMPILE
 #############################################
 # Link the executable CompiladorD.exe
 
-build CompiladorD.exe: C_EXECUTABLE_LINKER__CompiladorD_Debug CMakeFiles/CompiladorD.dir/P1Compiladores/abb.c.obj CMakeFiles/CompiladorD.dir/P1Compiladores/gestionerrores.c.obj CMakeFiles/CompiladorD.dir/P1Compiladores/lexico.c.obj CMakeFiles/CompiladorD.dir/P1Compiladores/main.c.obj CMakeFiles/CompiladorD.dir/P1Compiladores/sintactico.c.obj CMakeFiles/CompiladorD.dir/P1Compiladores/SistemaEntrada.c.obj CMakeFiles/CompiladorD.dir/P1Compiladores/tabladesimbolos.c.obj
+build CompiladorD.exe: C_EXECUTABLE_LINKER__CompiladorD_Debug CMakeFiles/CompiladorD.dir/P1Compiladores/abb.c.obj CMakeFiles/CompiladorD.dir/P1Compiladores/errores.c.obj CMakeFiles/CompiladorD.dir/P1Compiladores/lexico.c.obj CMakeFiles/CompiladorD.dir/P1Compiladores/main.c.obj CMakeFiles/CompiladorD.dir/P1Compiladores/sintactico.c.obj CMakeFiles/CompiladorD.dir/P1Compiladores/SistemaEntrada.c.obj CMakeFiles/CompiladorD.dir/P1Compiladores/tabladesimbolos.c.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\CompiladorD.dir

@@ -1,6 +1,5 @@
-
 #include "SistemaEntrada.h"
-#include "gestionerrores.h"
+#include "errores.h"
 #include "abb.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,17 +35,24 @@ void cargar_bloque();
  */
 void init(char *input){
 
+    /* Abro el archivo */
+
     file = fopen(input, "r");
+
+    /* Error en caso de fallo en fopen */
 
     if (file == NULL){
         perror("Error en fopen");
     }
 
+    /* Incializo punteros, bloque actual y centinelas */
     cent.inicio = 0;
     cent.delantero = 0;
     cent.bloque = A;
     cent.centA[N] = EOF;
     cent.centB[N] = EOF;
+
+    /* Cargo el primer bloque */
 
     cargar_bloque();
 
@@ -64,75 +70,81 @@ void cerrarD() {
 */
 void cargar_bloque() {
 
-    //Posicionamos el puntero de lectura en p_lecture
-    //fseek(file, p_lecture, SEEK_SET);
+    /* Comprobamos el bloque en el que nos encontramos */
 
-    //Comprobamos el bloque en el que nos encontramos
     if (cent.bloque == A) {
-        //Leemos los caracteres del file regression.d
+
+        /* Leemos los caracteres del file regression.d para cargarlos en A */
+
         p_lecture += fread(cent.centA, sizeof(char), N, file);
         //TODO: Comprobar si lexema sobrepasa al bloque para caso A y B
 
     } else if (cent.bloque == B) {
-        //Leemos los caracteres del file regression.d para cargarlo en B
+
+        /* Leemos los caracteres del file regression.d para cargarlos en A */
+
         p_lecture += fread(cent.centB, sizeof(char), N, file);
     }
 
+    /* p_lecture almacena la posicon a leer del fichero */
+
 }
 
-int a=0;
-
 /*
- * Funcion que ira devolviendo caracteres al analizador lexico
+ * Funcion que ira devolviendo caracteres al analizador lexico dependiendo del caso
  */
 char siguiente_caracter(){
 
-    if(cent.delantero == 123){
-        a++;
-        if(a==2){
-            printf("e");
-        }
-
-    }
-
     char lect;
-    //Comprobamos en que bloque se encuentran los punteros y por lo tanto de quien es el turno, si es de A
+
+    /* Comprobamos en que bloque se encuentran los punteros y por lo tanto de quien es el turno, si es de A */
+
     if(cent.bloque == A){
 
-        //asignamos el caracter en el que se encuentra el puntero delantero a el char lect
+        /* asignamos el caracter en el que se encuentra el puntero delantero */
         lect = cent.centA[cent.delantero];
 
-        //EOF?
+        /* Es EOF? */
+
         if(lect == EOF){
 
-            //Final archivo?
-            if(!feof(file)){ //No
+            /* Si lo es preguntamos si es el EOF del archivo */
 
-                //Puntero delantero -> Bloque B
+            if(!feof(file)){ /* Es el EOF del bloque */
+
+                /* Puntero delantero -> Bloque B */
+
                 cent.bloque = B;
-                cent.delantero = N+1; //Primera posicion del bloque B
-                //TODO: Comprobar caso de retroceder
-                //Para ver si se carga el bloque nuevo
+
+                /* Delantero pasa a la primera pos del bloque B */
+
+                cent.delantero = N+1;
+
+                /* Se carga el bloque en B para poder seguir leyendo */
+
                 cargar_bloque();
-                //Nos devuelve el siguiente caracter que no es EOF
+
+                /* Nos saltamos el EOF del bloque e invocamos al siguiente caracter del bloque B */
+
                 lect = siguiente_caracter();
 
 
-            }else{ //Si
+            }else{ /* En caso de ser EOF del fichero, si se devuelve para terminar */
 
-                // Adelanta p_delantero una pos
-                printf("EOF fichero..");
-                exit(0);
-                cent.delantero++;
+                /*Devuelve un EOF*/
+
+                return EOF;
             }
 
-        }else{ //No es EOF
+        }else{ /* En caso de no ser EOF avanza delantero */
 
-            //Se adelanta p_delantero una pos
+            /* Se adelanta p_delantero una pos */
             cent.delantero++;
         }
 
     }else if (cent.bloque == B){
+
+        /* Se realiza el mismo proceso que para el bloque A */
 
         lect = cent.centB[cent.delantero-(N+1)];
 
@@ -140,26 +152,38 @@ char siguiente_caracter(){
 
             if(!feof(file)){
 
-                //Cambio al bloque A
+                /* Cambio al bloque A */
+
                 cent.bloque = A;
-                //Puntero delantero a primera pos de A
+
+                /* En este caso Puntero delantero a primera pos de A que es 0 */
+
                 cent.delantero= 0;
-                //Cargo un nuevo bloque
+
+                /* Cargo un nuevo bloque */
+
                 cargar_bloque();
 
-                //TODO: Comprobar caso de retroceder
+                /* Nos saltamos el EOF del bloque e invocamos al siguiente caracter del bloque A */
+
                 lect = siguiente_caracter();
 
             }else{
-                printf("EOF fichero..");
-                exit(0);
-                cent.delantero++;
+
+                /*Devuelve un EOF*/
+
+                return EOF;
             }
-        }else{
+        }else{  /* En caso de no ser EOF avanza delantero */
+
+            /* Se adelanta p_delantero una pos */
+
             cent.delantero++;
         }
     }
-    //Devolvemos el caracter leido
+
+    /* Devolvemos el caracter a siguiente_comp_lexico */
+
     return lect;
 }
 
@@ -167,6 +191,8 @@ char siguiente_caracter(){
  * Funcion encargada de retroceder el puntero delantero en los centinelas, para que se cumpla que la estructura sea cíclica
  */
 void retroceder_puntero(){
+
+    /* Casos especiales */
 
     if(cent.bloque == A && cent.delantero == 0){//En caso de estar en la primera pos del primer bloque
 
@@ -178,8 +204,10 @@ void retroceder_puntero(){
 
 
     }else if(cent.bloque == B && cent.delantero == N+1){ //Primera posicion del bloque B
+
             //Cambia de bloque
             cent.bloque = A;
+
             //Retrocede una posicion
             cent.delantero = N - 1;
 
@@ -188,6 +216,13 @@ void retroceder_puntero(){
         cent.delantero--;
 
     }
+}
+
+/*
+ * Funcion privada para Igualar punteros
+ */
+void igualarPunteros(){
+    cent.inicio = cent.delantero;
 }
 
 
@@ -202,7 +237,7 @@ void getLexema(tipoelem *lexema){
 
     if(cent.inicio > cent.delantero){
         // l|a| |-| |h|o
-        tam = 2 * N - cent.inicio + cent.delantero;
+        tam = (2 * N - cent.inicio + cent.delantero)+1;
 
     }else{
         // |h|o|l|a|-| | |
@@ -212,7 +247,6 @@ void getLexema(tipoelem *lexema){
     //Si el lexema tiene un tamaño mayor o igual al bloque
     //|h|o|l|o|-|c|a|u|s|t|o|
     if(tam >=N){
-        //TODO:GESTION DE ERRORES LEXEMA TAM
         perror("El tamaño del lexema es demasiado grande");
         igualarPunteros();
     }
@@ -247,18 +281,19 @@ void getLexema(tipoelem *lexema){
         // l|a| |-| |h|o
         }else if (cent.inicio > cent.delantero){
 
+            //leo |h|o|
             for(int i = cent.inicio; i < ((N+1)*2)-1; i++){
                 lexema->lexema[cont] = cent.centA[i];
-                printf("\nIndice -> %d, Inicio -> %d, Delantero-> %d = %c", i, cent.inicio, cent.delantero, cent.centA[i] );
                 cont++;
             }
+
             //Paso cent.inicio al inicio del bloque A
             cent.inicio = 0;
 
+            //leo |l|a|
             for(int i = cent.inicio; i < cent.delantero; i++){
 
                 lexema->lexema[cont] = cent.centA[i];
-                printf("\nIndice -> %d, Inicio -> %d, Delantero-> %d = %c", i, cent.inicio, cent.delantero, cent.centA[i] );
                 cont++;
             }
 
@@ -267,13 +302,14 @@ void getLexema(tipoelem *lexema){
             //En caso de estar los dos en el mismo bloque
             // |h|o|l|a|-| | |
 
+            /* Si esta en el bloque A */
             if(cent.bloque == A){
 
                 for(int i = cent.inicio; i < cent.delantero; i++){
                     lexema->lexema[cont] = cent.centA[i];
                     cont++;
                 }
-
+            /* Si esta en el bloque B */
             }else{
 
                 for(int i = cent.inicio; i < cent.delantero; i++){
@@ -285,21 +321,13 @@ void getLexema(tipoelem *lexema){
 
 
         }
-        //Le añadimos el \0 al final del lexema
+        /* Le añadimos el \0 al final del lexema */
         lexema->lexema[cont] = '\0';
 
+        /* Igualamos los punteros Inical y final */
         igualarPunteros();
-
-        //TODO:Se supone que falta el caso de la flag avanza, que todavia no se muy bien que es, asi que lo dejare asi.
     }
 
-}
-
-/*
- * Funcion privada para Igualar punteros
- */
-void igualarPunteros(){
-    cent.inicio = cent.delantero;
 }
 
 

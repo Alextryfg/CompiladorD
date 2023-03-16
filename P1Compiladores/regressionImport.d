@@ -1,3 +1,3 @@
-import std.stdio;
+mport std.stdio;
 import std.algorithm.iteration;
 import std.exception;

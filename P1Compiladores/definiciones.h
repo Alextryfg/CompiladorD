@@ -19,8 +19,7 @@
 #define OPERADORDOSIGUAL 402
 #define OPERADORSIMPLE 403
 
-//Los delimitadores, tales como corchete, parentesis, llaves, puntos, comas, Asterisco (), [] , {} , . , , , * , + , /, ; y asi,
-//simplemente devolvere su código ASCII. De esta manera, no tendre que crear
-//un codigo para ellos en la tabla de símbolos.
+//Los delimitadores, tales como corchete, parentesis, llaves, puntos, comas, Asterisco (), [] , {} , . , , , * , + , /, ; ,...,
+//simplemente devolvere su código ASCII.
 
 #endif /* DEFINITIONS_H_ */

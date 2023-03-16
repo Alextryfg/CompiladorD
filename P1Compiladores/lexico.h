@@ -4,5 +4,4 @@
 
 int siguiente_componente_lexico(tipoelem *comp);
 
-
 #endif	// LEXICO_H

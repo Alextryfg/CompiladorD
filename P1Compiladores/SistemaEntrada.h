@@ -5,21 +5,42 @@
 #define A 0		//Indicador de Bloque B
 #define B 1		//Indicador de Bloque A
 
-void init(char *archivo);//Se abre el archivo y se leen los primeros 64 caracteres
-void cerrarD(); // Cerramos el archivo
+/*
+ * Inicializacion del sistema de entrada
+ */
+void init(char *input);
 
-/*LEXEMA FUNCTIONS*/
+/*
+ * Cerramos el archivo
+*/
+void cerrarD();
+
+/*
+ * Funcion utilizada para cargar los bloques en los distintos centinelas.
+*/
+void cargar_bloque();
+
+/*
+ * Funcion que ira devolviendo caracteres al analizador lexico dependiendo del caso
+ */
 char siguiente_caracter();
 
-void retroceder_puntero(); //Comprobamos la pos de delantero y la retrasamos una pos (Devolver_puntero)
+/*
+ * Funcion encargada de retroceder el puntero delantero en los centinelas, para que se cumpla que la estructura sea cíclica
+ */
+void retroceder_puntero();
 
-void avanzar_delantero(char lect);
-
-void getLexema(tipoelem *lexema); //recupera lexema
-
-void aceptar_lexema(); //aceptar
-
+/*
+ * Funcion privada para Igualar punteros
+ */
 void igualarPunteros();
+
+/*
+ * Funcion para recoger el lexema completo dependiendo de los distintos casos
+ */
+void getLexema(tipoelem *lexema);
+
+
 
 
 

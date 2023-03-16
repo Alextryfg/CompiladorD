@@ -1,6 +1,4 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "abb.h"
 #include "definiciones.h"
 
@@ -8,23 +6,19 @@
 abb tabla;
 
 
-/* Almaceno las primeras Keywords */
+/* Almaceno las Keywords del programa */
 
 tipoelem initial[] = {{"identificador", ID},{"import", IMPORT},
                     {"string", STRING}, {"int", INT}, {"float", FLOAT}, {"while", WHILE},
                     {"foreach", FOREACH}, {"return", RETURN}, {"void", VOID}, {"cast", CAST}};
 
 /*
- *
  * Funcion auxiliar para insertar en la tabla de simbolos, las keywords iniciales
- *
  */
 void insertSimbol(tipoelem keys){
 
     //Insertamos el elemento en la tabla de simbolos
     insertar(&tabla,keys);
-
-
 
 }
 
@@ -34,7 +28,7 @@ void insertSimbol(tipoelem keys){
 void initTabla() {
 
     crear(&tabla);
-    for (int i = 0; i < 9; i++)
+    for (int i = 0; i < 10; i++)
         insertSimbol(initial[i]);
 
 }
@@ -59,13 +53,10 @@ void findCodigo(tipoelem *simb){
             simb->codigo = s.codigo;
         }
 
-
 }
 
-
-
 /*
- * Funcion que imprime la tabla, invocando a la recursiva anterior
+ * Funcion que imprime la tabla, invocando a la recursiva de abb.h
  */
 void printTabla(){
     printf("\n*************TABLA DE SIMBOLOS*************");
