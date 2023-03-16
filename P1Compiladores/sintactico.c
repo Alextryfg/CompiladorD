@@ -14,6 +14,8 @@ void _printComp(tipoelem comp){
         printf("\n<%d,\\n>", comp.codigo);
     }else if(comp.lexema[0] == ' '){
         printf("\n<%d,SPACE>", comp.codigo);
+    }else if(comp.codigo == STRING){
+        printf("\n<%d,STRING>", comp.codigo);
     }else{
         printf("\n<%d,%s>", comp.codigo, comp.lexema);
     }
@@ -31,14 +33,21 @@ void compilarD(){
     while(siguiente_componente_lexico(&comp) != -1){
         _printComp(comp);
 
-        //Se libera la memoria del lexema
-        if(comp.lexema!=NULL){
-            free(comp.lexema);
-            comp.lexema=NULL;
-            comp.codigo=-1;
-        }
+
+
 
     }
+
+    //Se libera la memoria del lexema
+    if(comp.lexema!=NULL){
+        free(comp.lexema);
+        comp.lexema=NULL;
+        comp.codigo=-1;
+    }
+
+
+
+
 
 
 

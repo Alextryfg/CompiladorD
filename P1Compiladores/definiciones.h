@@ -14,7 +14,10 @@
 #define CAST 309
 
 //Operadores
-#define OPERADOR 400
+#define OPERADORSUMASUMA 400
+#define OPERADORSUMAIGUAL 401
+#define OPERADORDOSIGUAL 402
+#define OPERADORSIMPLE 403
 
 //Los delimitadores, tales como corchete, parentesis, llaves, puntos, comas, Asterisco (), [] , {} , . , , , * , + , /, ; y asi,
 //simplemente devolvere su código ASCII. De esta manera, no tendre que crear

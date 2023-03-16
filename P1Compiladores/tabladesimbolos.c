@@ -7,35 +7,22 @@
 /*Se trata del arbol que almacenara la tabla de simbolos*/
 abb tabla;
 
-/* Estructura de almacenamiento para la tabla de simbolos*/
-typedef struct{
-    char *id;
-    int codigo;
-}keywords;
-
 
 /* Almaceno las primeras Keywords */
 
-keywords initial[] = {{"identificador", ID},{"import", IMPORT},
+tipoelem initial[] = {{"identificador", ID},{"import", IMPORT},
                     {"string", STRING}, {"int", INT}, {"float", FLOAT}, {"while", WHILE},
-                    {"foreach", FOREACH}, {"return", RETURN}, {"void", VOID}};
+                    {"foreach", FOREACH}, {"return", RETURN}, {"void", VOID}, {"cast", CAST}};
 
 /*
  *
  * Funcion auxiliar para insertar en la tabla de simbolos, las keywords iniciales
  *
  */
-void insertSimbol(keywords keys){
+void insertSimbol(tipoelem keys){
 
-    //Creamos una instancia de la estrucutra tipoelem
-    tipoelem simb;
-    //Reservamos la memoria justa con el tamaño del id
-    simb.lexema = (char*)malloc(sizeof(char)*(strlen(keys.id)+1));
-    //Copiamos en simbolo el id y el código
-    strcpy(simb.lexema,keys.id);
-    simb.codigo = keys.codigo;
     //Insertamos el elemento en la tabla de simbolos
-    insertar(&tabla,simb);
+    insertar(&tabla,keys);
 
 
 
@@ -65,23 +52,13 @@ void destruirTabla(){
 
 void findCodigo(tipoelem *simb){
 
-    //Si se encuentra en la tabla
-    if(es_miembro(tabla, *simb)){
-        tipoelem s;
-        //Se busca el nodo por medio del lexema almacenandolo en s
-        buscar_nodo(tabla,simb->lexema,&s);
-        simb->codigo = s.codigo;
+        if(es_miembro(tabla,*simb)){
+            tipoelem s;
+            //Se busca el nodo por medio del lexema almacenandolo en s
+            buscar_nodo(tabla, simb->lexema, &s);
+            simb->codigo = s.codigo;
+        }
 
-    }else{ //En caso de no existir
-
-        //Creo una keyword y lo inserto
-        keywords key;
-        key.id = simb->lexema;
-        key.codigo = simb->codigo;
-        insertSimbol(key);
-
-
-    }
 
 }
 

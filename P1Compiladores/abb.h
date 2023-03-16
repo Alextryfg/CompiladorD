@@ -9,9 +9,8 @@
 typedef char *tipoclave;
 
 typedef struct{
-    int codigo;
     char *lexema;
-
+    int codigo;
 }tipoelem;
 
 typedef struct celda * abb;//tipo opaco
