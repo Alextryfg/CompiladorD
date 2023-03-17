@@ -76,14 +76,26 @@ void cargar_bloque() {
 
         /* Leemos los caracteres del file regression.d para cargarlos en A */
 
-        p_lecture += fread(cent.centA, sizeof(char), N, file);
-        //TODO: Comprobar si lexema sobrepasa al bloque para caso A y B
+        p_lecture = fread(cent.centA, sizeof(char), N, file);
+
+        /* En de leer menos de 64 caracteres quiere decir que encontro el EOF, y por lo tanto se asigna al centinela en la pos correspondiente */
+
+        if(p_lecture < 64){
+            cent.centA[p_lecture] = EOF;
+        }
 
     } else if (cent.bloque == B) {
 
         /* Leemos los caracteres del file regression.d para cargarlos en A */
 
-        p_lecture += fread(cent.centB, sizeof(char), N, file);
+        p_lecture = fread(cent.centB, sizeof(char), N, file);
+
+        /* En de leer menos de 64 caracteres quiere decir que encontro el EOF, y por lo tanto se asigna al centinela en la pos correspondiente */
+
+        if(p_lecture < 64){
+            cent.centB[p_lecture] = EOF;
+        }
+
     }else{
 
         errorD(3);
@@ -135,6 +147,10 @@ char siguiente_caracter(){
 
             }else{ /* En caso de ser EOF del fichero, si se devuelve para terminar */
 
+                /* Adelanto el puntero delantero */
+
+                cent.delantero++;
+
                 /*Devuelve un EOF*/
 
                 return EOF;
@@ -173,6 +189,10 @@ char siguiente_caracter(){
                 lect = siguiente_caracter();
 
             }else{
+
+                /* Adelanto el puntero delantero */
+
+                cent.delantero++;
 
                 /*Devuelve un EOF*/
 

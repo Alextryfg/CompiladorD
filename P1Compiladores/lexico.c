@@ -9,12 +9,12 @@
 /*
  * Automatas a definir:
  *
- *  Operadores simples: Caso 0;
+ *  es simples: Caso 0;
  *  Delimitadores: Caso 0;
  *  identificadores: Caso 1;
  *  keywords: Caso 1;
  *  integers: Caso 2;
- *  Operadores Dobles: Caso 4;
+ *  es Dobles: Caso 4;
  *  Strings: Caso 5;
  *  floats: Caso 6;
  *
@@ -63,18 +63,11 @@ int siguiente_componente_lexico(tipoelem *comp){
 
                 //Separador o TOKENs
                 if(c == ' ' || c == '\t' || c == '\r' || c == '\n' || c== '.' || c == ';' || c == '}' || c == '{' || c == '(' || c == ')' || c == '['
-                || c == ']' || c == ',' || c == '*' || c == '<' || c == '>' || c == '%' || c == '-'){
-                    //Subseccion para Operadores Simples
-                    if( c == '*' || c == '<' || c == '>' || c == '-'){
-                        comp->codigo=OPERADORSIMPLE;
-                        _formarLexema(comp,0);
-                        accept = 1;
+                || c == ']' || c == ','){
                     //En TOKENs simplemente devuelvo el ASCII
-                    }else{
                         comp->codigo = c;
                         _formarLexema(comp,0);
                         accept = 1;
-                    }
 
                 //Identificador?
                 }else if (isalpha(c) || c == '_'){ //IDENTIFICADORES
@@ -85,8 +78,8 @@ int siguiente_componente_lexico(tipoelem *comp){
                 //Comentario?
                 }else if(c == '/'){ //COMENTARIOS
                     state = 3;
-                //Doble Operador?
-                }else if(c == '+' || c == '='){  //DOBLEOPERADOR?
+                //Dobles operadores ?
+                }else if(c == '+' || c == '=' || c == '-' || c == '*' || c == '|' || c == '>' || c == '<' || c == '&' || c == '%'){  //DOBLE?
                     state = 4;
                 //String?
                 }else if(c == '"'){ //STRING?
@@ -109,15 +102,6 @@ int siguiente_componente_lexico(tipoelem *comp){
                 while(isalpha(c) || isdigit(c) || c == '_'){
                     c = siguiente_caracter();
 
-                }
-
-                /*
-                 * El caso de EOF
-                 */
-                if(c == EOF){
-                    comp->codigo=-1;
-                    accept = 1;
-                    break;
                 }
 
                 //Asocio el codigo
@@ -199,7 +183,7 @@ int siguiente_componente_lexico(tipoelem *comp){
                 //Comentario de una sola linea
                 if( c == '/'){
 
-                    while(c != '\n'){
+                    while(c != '\n' ){
                         c = siguiente_caracter();
                     }
                 //Comentario de varias lineas
@@ -243,11 +227,11 @@ int siguiente_componente_lexico(tipoelem *comp){
                             }
                         }
                     }
-                //Caso de que no es ningun tipo de comentario, por lo que se ira al automata de los operadores
+                //Caso de que no es ningun tipo de comentario, por lo que se ira al automata de los es
                 }else{
 
                     //Es decir encontramos '/' a solas
-                    comp->codigo = OPERADORSIMPLE;
+                    comp->codigo = SIMPLE;
 
                     //Elemento individual por lo que requiere retroceso de puntero delantero
                     _formarLexema(comp,1);
@@ -274,25 +258,92 @@ int siguiente_componente_lexico(tipoelem *comp){
                 if(c == '='){
                     c = siguiente_caracter();
                     if(c == '='){
-                        comp->codigo = OPERADORDOSIGUAL;
-                    }else{ //En otro caso operador normal
-                        comp->codigo = OPERADORSIMPLE;
+                        comp->codigo = DOSIGUAL;
+                    }else{ //En otro caso  normal
+                        comp->codigo = SIMPLE;
                     }
-                //(+=) o (++), en otro caso operador normal
+                //(+=) o (++), en otro caso  normal
                 }else if(c == '+'){
                     c = siguiente_caracter();
                     if(c == '='){
-                        comp->codigo = OPERADORSUMAIGUAL;
+                        comp->codigo = SUMAIGUAL;
                     }else if(c == '+'){
-                        comp->codigo = OPERADORSUMASUMA;
+                        comp->codigo = SUMASUMA;
                     }
                     else{
-                        comp->codigo = OPERADORSIMPLE;
+                        comp->codigo = SIMPLE;
+                    }
+                //(--) 0 (-=)
+                }else if( c == '-'){
+                    c = siguiente_caracter();
+                    if( c == '-'){
+                        comp->codigo = MENOSMENOS;
+                    }else if(c == '='){
+                        comp->codigo = MENOSIGUAL;
+                    }else{
+                        comp->codigo = SIMPLE;
+                    }
+                // (*=)
+                }else if(c == '*'){
+                    c = siguiente_caracter();
+                    if( c == '=') {
+                        comp->codigo = PORIGUAL;
+                    }else{
+                        comp->codigo = SIMPLE;
+                    }
+                // (|, |= , ||)
+                }else if(c == '|'){
+                    c = siguiente_caracter();
+                    if( c == '=') {
+                        comp->codigo = BARRAIGUAL;
+                    }else if( c == '|') {
+                        comp->codigo = DOSBARRA;
+                    }else{
+                            comp->codigo = SIMPLE;
+                    }
+
+                // ( &, &=, &&)
+                }else if( c == '&'){
+                    c = siguiente_caracter();
+                    if( c == '=') {
+                        comp->codigo = ANDIGUAL;
+                    }else if( c == '&') {
+                        comp->codigo = DOSAND;
+                    }else{
+                        comp->codigo = SIMPLE;
+                    }
+                // ( %=, %)
+                }else if( c == '%'){
+                    c = siguiente_caracter();
+                    if( c == '='){
+                        comp->codigo = PORCIENTOIGUAL;
+                    }else{
+                        comp->codigo = SIMPLE;
+                    }
+                //(<=, <, <<)
+                }else if( c == '<'){
+                    c = siguiente_caracter();
+                    if( c == '=') {
+                        comp->codigo = MENORIGUAL;
+                    }else if( c == '<') {
+                        comp->codigo = MENORMENOR;
+                    }else{
+                        comp->codigo = SIMPLE;
+                    }
+                //(>=, >, >>)
+                }else if( c == '>') {
+                    c = siguiente_caracter();
+                    if (c == '=') {
+                        comp->codigo = MAYORIGUAL;
+                    } else if (c == '>') {
+                        comp->codigo = MAYORMAYOR;
+                    } else {
+                        comp->codigo = SIMPLE;
                     }
                 }
 
-                // Si es un operador simple, se necesita el retroceso del puntero
-                if(comp->codigo == OPERADORSIMPLE){
+                // Si es un  simple, se necesita el retroceso del puntero
+                if(comp->codigo == SIMPLE){
                     _formarLexema(comp,1);
                 }else{
                     _formarLexema(comp,0);
@@ -382,7 +433,7 @@ int siguiente_componente_lexico(tipoelem *comp){
                     }
                 }
 
-                //Aigno el codigo de float
+                //Asigno el codigo de float
                 comp->codigo = FLOATPOINT;
 
                 //Formo el lexema
@@ -397,6 +448,6 @@ int siguiente_componente_lexico(tipoelem *comp){
 
     }
 
-    /* Devolvemos al sintactico el código. (Comp se da por referencia por lo que se modifica durante la ejecucion de la funcion */
+    /* Devolvemos al sintactico el código. (Comp se da por referencia por lo que se modifica durante la ejecucion de la funcion) */
     return comp->codigo;
 }

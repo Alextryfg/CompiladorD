@@ -10,9 +10,9 @@
 void _printComp(tipoelem comp){
     //En caso de ser caracteres especiales
     if(comp.lexema[0] == '\r'){
-        printf("\n<%d,\\r>", comp.codigo);
+        //printf("\n<%d,\\r>", comp.codigo);
     }else if(comp.lexema[0] == '\t'){
-        printf("\n<%d,\\t>", comp.codigo);
+        //printf("\n<%d,\\t>", comp.codigo);
     }else if(comp.lexema[0] == '\n' || comp.lexema[1] == '\n'){
         //printf("\n<%d,\\n>", comp.codigo);
     }else if(comp.lexema[0] == ' '){
