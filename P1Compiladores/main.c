@@ -5,14 +5,10 @@
 
 int main(int argc, char **argv) {
 
-    //if(argc == 2){
+    if(argc == 2){
 
         /* Inicializamos el sistema de entrada */
-        //init(argv[1]);
-        //PC grande
-        init("C:\\Users\\USUARIO\\Desktop\\P1Compiladores\\P1Compiladores\\regression.d");
-        //Portatil
-        //init("C:\\Users\\Usuario\\Desktop\\P1Compilador\\CompiladorD\\P1Compiladores\\regressionImport.d");
+        init(argv[1]);
 
         /* Inicializamos la tabla de simbolos y la imprimimos por pantalla */
         initTabla();
@@ -30,9 +26,9 @@ int main(int argc, char **argv) {
         /* Cerramos el archivo regression.d */
         cerrarD();
 
-    //}else{
-      //  errorD(5);
-    //}
+    }else{
+        errorD(5);
+    }
 
 
 }
