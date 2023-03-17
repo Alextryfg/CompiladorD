@@ -14,6 +14,10 @@
 #define CAST 309
 #define DOUBLE 310
 
+//TIPO DE DATO
+#define INTEGER 311
+#define FLOATPOINT 312
+
 //Operadores
 #define OPERADORSUMASUMA 400
 #define OPERADORSUMAIGUAL 401

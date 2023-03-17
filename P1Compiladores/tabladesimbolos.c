@@ -27,7 +27,10 @@ void insertSimbol(tipoelem keys){
  */
 void initTabla() {
 
+    /* Creo la tabla */
     crear(&tabla);
+
+    /* Inserto sus elementos */
     for (int i = 0; i < 11; i++)
         insertSimbol(initial[i]);
 
@@ -43,14 +46,18 @@ void destruirTabla(){
 /*
  * Funcion encargada de encontrar un lexema dentro de el arbol. Si el elemento no esta en la tabla, se introducirá
  */
-
 void findCodigo(tipoelem *simb){
 
+        /* Si es miembro simplemente se busca su codigo y se devuelve a _formarLexema en el lexico.c */
         if(es_miembro(tabla,*simb)){
             tipoelem s;
             //Se busca el nodo por medio del lexema almacenandolo en s
             buscar_nodo(tabla, simb->lexema, &s);
             simb->codigo = s.codigo;
+        /* En caso de no ser miembro, lo insertamos como un nuevo ID */
+        }else{
+            simb->codigo= ID;
+            insertSimbol(*simb);
         }
 
 }

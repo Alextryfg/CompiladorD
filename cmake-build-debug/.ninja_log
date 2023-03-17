@@ -20,3 +20,17 @@
 14	189	7006961850335544	CMakeFiles/CompiladorD.dir/P1Compiladores/lexico.c.obj	58d615e89ec74327
 19	436	7006962392501535	CMakeFiles/CompiladorD.dir/P1Compiladores/SistemaEntrada.c.obj	50ce9778becca318
 438	1618	7006962404135916	CompiladorD.exe	48673f8930d1eaa5
+10	3216	7007144217279341	CMakeFiles/CompiladorD.dir/P1Compiladores/lexico.c.obj	58d615e89ec74327
+3218	6570	7007144255835941	CompiladorD.exe	48673f8930d1eaa5
+9	506	7007146297283802	CMakeFiles/CompiladorD.dir/P1Compiladores/lexico.c.obj	58d615e89ec74327
+508	933	7007146301520008	CompiladorD.exe	48673f8930d1eaa5
+6	5760	7007147233613357	CMakeFiles/CompiladorD.dir/P1Compiladores/lexico.c.obj	58d615e89ec74327
+5763	6363	7007147239695013	CompiladorD.exe	48673f8930d1eaa5
+12	1133	7007150423106695	CMakeFiles/CompiladorD.dir/P1Compiladores/sintactico.c.obj	a5f94d86666fc2e3
+134	1144	7007150423216724	CMakeFiles/CompiladorD.dir/P1Compiladores/tabladesimbolos.c.obj	4deeddcedc472967
+101	1146	7007150423136706	CMakeFiles/CompiladorD.dir/P1Compiladores/lexico.c.obj	58d615e89ec74327
+1146	3406	7007150445812029	CompiladorD.exe	48673f8930d1eaa5
+318	1263	7007156905894447	CMakeFiles/CompiladorD.dir/P1Compiladores/tabladesimbolos.c.obj	4deeddcedc472967
+90	1386	7007156906016885	CMakeFiles/CompiladorD.dir/P1Compiladores/lexico.c.obj	58d615e89ec74327
+214	1411	7007156907288796	CMakeFiles/CompiladorD.dir/P1Compiladores/sintactico.c.obj	a5f94d86666fc2e3
+1412	2112	7007156914322030	CompiladorD.exe	48673f8930d1eaa5

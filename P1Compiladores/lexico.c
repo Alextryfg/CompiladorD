@@ -151,7 +151,7 @@ int siguiente_componente_lexico(tipoelem *comp){
                             c = siguiente_caracter();
                         }
                         //Palabra reservada INT
-                        comp->codigo=INT;
+                        comp->codigo=INTEGER;
                     }else if(c == '.') {
                         //Estado de los float
                         state = 6;
@@ -168,14 +168,14 @@ int siguiente_componente_lexico(tipoelem *comp){
                             state = 6;
                         }else{
                             //De otra forma se reconoce como INT
-                            comp->codigo= INT;
+                            comp->codigo= INTEGER;
                         }
                     }
                     //En cualquier otro caso se asigna int al codigo
-                    comp->codigo=INT;
+                    comp->codigo=INTEGER;
 
                     //Si no esta en el estado 6, quiere decir que detecto INT, si no es FLOAT
-                    if(comp->codigo == INT && state!= 6){
+                    if(comp->codigo == INTEGER && state!= 6){
                         //Formo el lexema
                         _formarLexema(comp,1);
 
@@ -348,31 +348,33 @@ int siguiente_componente_lexico(tipoelem *comp){
                  * 6_022_.140_857E+20_
                  */
                 /* De nuevo, haremos hincapie en los que aparecen en el codigo regression.d */
-
+                while(isdigit(c) || c == '_'){
+                    c = siguiente_caracter();
+                }
                 //Exponente (
                 if(c == 'E' || c == 'e'){
                     c = siguiente_caracter();
                     //Caso: 4e+1
-                    if(isdigit(c) || c == '-' || c == '+'){
+                    if(isdigit(c) || c == '-' || c == '+' || c == '_'){
                         c = siguiente_caracter();
                     }else{
                         errorD(4);
                     }
-                    while(isdigit(c)){
+                    while(isdigit(c) || c == '_'){
                         c = siguiente_caracter();
                     }
                 //Caso: 4.0
                 }else if (c == '.'){
                     c = siguiente_caracter();
-                    while(isdigit(c)){
+                    while(isdigit(c) || c == '_'){
                         c = siguiente_caracter();
                     }
                     //Caso: 4.0e+03
                     if(c == 'e' || c == 'E'){
                         c = siguiente_caracter();
-                        if(c == '+'){
+                        if(c == '+' || isdigit(c) || c == '-' || c == '_'){
                             c = siguiente_caracter();
-                            while(isdigit(c)){
+                            while(isdigit(c) || c == '_'){
                                 c = siguiente_caracter();
                             }
                         }
@@ -381,7 +383,7 @@ int siguiente_componente_lexico(tipoelem *comp){
                 }
 
                 //Aigno el codigo de float
-                comp->codigo = FLOAT;
+                comp->codigo = FLOATPOINT;
 
                 //Formo el lexema
                 _formarLexema(comp,1);
