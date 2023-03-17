@@ -1,6 +1,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+/*
+ * Funcion de errores dependiendo del caso
+ */
 void errorD(int idCodigo){
     switch(idCodigo){
         case 1:
