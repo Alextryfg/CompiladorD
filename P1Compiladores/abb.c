@@ -246,9 +246,10 @@ void _printTabla(abb *A){
         if (&(*A)->izq != NULL) {
             _printTabla(&(*A)->izq);
             printf("\nLexema: %14s", (*A)->info.lexema);
+            printf("%15s: %-3d", "Codigo", (*A)->info.codigo);
         }
 
-        printf("%15s: %-3d", "Codigo", (*A)->info.codigo);
+
 
         if (&(*A)->der != NULL) {
             _printTabla(&(*A)->der);

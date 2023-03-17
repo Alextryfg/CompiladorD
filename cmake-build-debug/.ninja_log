@@ -34,3 +34,6 @@
 90	1386	7007156906016885	CMakeFiles/CompiladorD.dir/P1Compiladores/lexico.c.obj	58d615e89ec74327
 214	1411	7007156907288796	CMakeFiles/CompiladorD.dir/P1Compiladores/sintactico.c.obj	a5f94d86666fc2e3
 1412	2112	7007156914322030	CompiladorD.exe	48673f8930d1eaa5
+506	2029	7007168995700977	CMakeFiles/CompiladorD.dir/P1Compiladores/abb.c.obj	85cb63378660a3e0
+848	2080	7007168996230942	CMakeFiles/CompiladorD.dir/P1Compiladores/tabladesimbolos.c.obj	4deeddcedc472967
+2081	2446	7007168999790932	CompiladorD.exe	48673f8930d1eaa5
