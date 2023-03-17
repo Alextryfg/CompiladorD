@@ -5,8 +5,9 @@
 int main(int argc, char **argv) {
 
         /* Inicializamos el sistema de entrada */
+        init("regression.d");
         //PC grande
-		init("C:\\Users\\USUARIO\\Desktop\\P1Compiladores\\P1Compiladores\\regression.d");
+		//init("C:\\Users\\USUARIO\\Desktop\\P1Compiladores\\P1Compiladores\\regression.d");
         //Portatil
         //init("C:\\Users\\Usuario\\Desktop\\P1Compilador\\CompiladorD\\P1Compiladores\\regressionImport.d");
 

@@ -1,4 +1,4 @@
-#include "SistemaEntrada.h"
+#include "sistemaEntrada.h"
 #include "errores.h"
 #include "abb.h"
 #include <stdio.h>
