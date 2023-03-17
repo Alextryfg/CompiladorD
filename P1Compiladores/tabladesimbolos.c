@@ -68,5 +68,5 @@ void findCodigo(tipoelem *simb){
 void printTabla(){
     printf("\n*************TABLA DE SIMBOLOS*************");
     _printTabla(&tabla);
-    printf("\n*******************************************");
+    printf("\n*******************************************\n");
 }
