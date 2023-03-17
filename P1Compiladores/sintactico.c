@@ -17,8 +17,6 @@ void _printComp(tipoelem comp){
         //printf("\n<%d,\\n>", comp.codigo);
     }else if(comp.lexema[0] == ' '){
         //No se imprimen
-    }else if(comp.codigo == STRING){
-        printf("\n<%d,STRING>", comp.codigo);
     }else{
         printf("\n<%d,%s>", comp.codigo, comp.lexema);
     }

@@ -47,3 +47,12 @@
 5	534	7007582959525406	CMakeFiles/CompiladorD.dir/P1Compiladores/sintactico.c.obj	a5f94d86666fc2e3
 34	542	7007582959865383	CMakeFiles/CompiladorD.dir/P1Compiladores/tabladesimbolos.c.obj	4deeddcedc472967
 542	884	7007582963035365	CompiladorD.exe	2107c2313071b5b
+6	856	7007751702686272	CMakeFiles/CompiladorD.dir/P1Compiladores/errores.c.obj	141f09c1a793fbd1
+36	871	7007751702856275	CMakeFiles/CompiladorD.dir/P1Compiladores/sistemaEntrada.c.obj	bdc857ef280e8f14
+17	274	7007752284936603	CMakeFiles/CompiladorD.dir/P1Compiladores/main.c.obj	84177563c85130f4
+6	352	7007752285896583	CMakeFiles/CompiladorD.dir/P1Compiladores/lexico.c.obj	58d615e89ec74327
+352	1089	7007752293006572	CompiladorD.exe	2107c2313071b5b
+8	225	7007752495361671	CMakeFiles/CompiladorD.dir/P1Compiladores/main.c.obj	84177563c85130f4
+226	620	7007752498431686	CompiladorD.exe	2107c2313071b5b
+6	268	7007752793109485	CMakeFiles/CompiladorD.dir/P1Compiladores/sintactico.c.obj	a5f94d86666fc2e3
+270	732	7007752797669495	CompiladorD.exe	2107c2313071b5b
