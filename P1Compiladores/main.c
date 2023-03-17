@@ -1,13 +1,16 @@
 #include "tabladesimbolos.h"
 #include "sintactico.h"
 #include "sistemaEntrada.h"
+#include "errores.h"
 
 int main(int argc, char **argv) {
 
+    if(argc == 2){
+
         /* Inicializamos el sistema de entrada */
-        init("regression.d");
+        init(argv[1]);
         //PC grande
-		//init("C:\\Users\\USUARIO\\Desktop\\P1Compiladores\\P1Compiladores\\regression.d");
+        //init("C:\\Users\\USUARIO\\Desktop\\P1Compiladores\\P1Compiladores\\regression.d");
         //Portatil
         //init("C:\\Users\\Usuario\\Desktop\\P1Compilador\\CompiladorD\\P1Compiladores\\regressionImport.d");
 
@@ -26,5 +29,10 @@ int main(int argc, char **argv) {
 
         /* Cerramos el archivo regression.d */
         cerrarD();
+
+    }else{
+        errorD(5);
+    }
+
 
 }

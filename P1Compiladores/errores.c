@@ -13,6 +13,8 @@ void errorD(int idCodigo){
             break;
         case 4:
             perror("\nLexema mal formado");
+        case 5:
+            perror("\nParametros insuficiente en linea de comandos ./compiladorD regression.d\n");
         default:
             perror("\nError: No se pudo identificar el error");
             break;
