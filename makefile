@@ -8,13 +8,13 @@ HEADER_FILES_DIR = .
 INCLUDES = -I $(HEADER_FILES_DIR)
 
 #nombre del ejecutable o archivo de salida
-OUTPUT = fibo
+OUTPUT = compiladorD
 
 #ficheros .h.  Si hay varios, se precede cada uno con $(HEADER_FILES_DIR)/
-HEADERS = $(HEADER_FILES_DIR)/vectordinamico.h $(HEADER_FILES_DIR)/Fibonacci.h
+HEADERS = $(HEADER_FILES_DIR)/definiciones.h lexico.h sintactico.h sistemaEntrada.h abb.h tabladesimbolos.h errores.h abb.h
 
 #FUENTES: todos los archivos .c necesarios
-SRCS = main.c vectordinamico.c Fibonacci.c
+SRCS = main.c lexico.c sintactico.c sistemaEntrada.c abb.c tabladesimbolos.c errores.c
 
 #ficheros .o: todos los .o con un analogo .c en SRCS
 OBJS = $(SRCS:.c=.o)
